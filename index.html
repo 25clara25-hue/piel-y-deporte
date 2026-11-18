@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piel y Deporte</title>
+<meta name="description" content="Fotoprotección y signos de alarma en la piel para deportistas, entrenadores y organizadores. Prototipo.">
+<style>
+:root{
+  --bg:#fbfaf6; --surface:#ffffff; --ink:#1b2a33; --muted:#51616b; --line:#e3e0d6;
+  --brand:#0b6e6e; --brand-ink:#ffffff; --brand-soft:#e3f3f1;
+  --sun:#f2a516; --sun-soft:#fff4dc; --warn:#9a3d00; --warn-soft:#fde9dc;
+  --ok:#1f7a3a; --ok-soft:#e2f4e7; --demo:#6b3fa0; --demo-soft:#f0e8fa;
+  --radius:16px; --shadow:0 1px 2px rgba(27,42,51,.06),0 4px 14px rgba(27,42,51,.06);
+  --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 var(--font)}
+a{color:var(--brand);text-underline-offset:2px}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.65rem} h2{font-size:1.35rem} h3{font-size:1.1rem}
+p{margin:0 0 .8em}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:6px}
+
+/* Cabecera */
+.proto{background:var(--sun-soft);border-bottom:1px solid #f0d9a6;color:#5a3d00;font-size:.88rem;padding:8px 0}
+.proto .wrap{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.proto a{color:#5a3d00;font-weight:700}
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header.top .wrap{display:flex;align-items:center;gap:12px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;font-size:1.15rem}
+.brand svg{flex:none}
+.back{margin-left:auto;display:none}
+main{padding:20px 0 48px}
+
+/* Tarjetas y botones */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.grid{display:grid;gap:12px}
+.tile{display:flex;align-items:center;gap:14px;text-align:left;width:100%;min-height:76px;padding:14px 16px;border-radius:var(--radius);
+  border:2px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:1.08rem;cursor:pointer;text-decoration:none;box-shadow:var(--shadow)}
+.tile:hover{border-color:var(--brand)}
+.tile .ico{flex:none;width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand)}
+.tile small{display:block;font-weight:400;color:var(--muted);font-size:.9rem}
+.tile.secondary{min-height:60px;font-size:1rem;border-style:dashed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:12px 18px;border-radius:12px;border:2px solid var(--brand);
+  background:var(--brand);color:var(--brand-ink);font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--brand)}
+.btn.small{min-height:42px;padding:8px 12px;font-size:.95rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn.full{width:100%}
+
+/* Formularios */
+label.f{display:block;font-weight:700;margin:14px 0 6px}
+.hint{font-size:.9rem;color:var(--muted);font-weight:400}
+input[type=text],input[type=date],input[type=time],select,textarea{width:100%;min-height:52px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:90px}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chip span{display:inline-flex;align-items:center;min-height:46px;padding:8px 14px;border:2px solid var(--line);border-radius:999px;background:#fff;font-weight:700}
+.chip input:checked+span{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.chip input:focus-visible+span{outline:3px solid var(--sun);outline-offset:2px}
+
+/* Estados y avisos */
+.note{border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.95rem}
+.note.info{background:var(--brand-soft)}
+.note.warn{background:var(--warn-soft);color:#5c2400}
+.note.demo{background:var(--demo-soft);color:#3f2066;border:2px dashed var(--demo)}
+.note.ok{background:var(--ok-soft);color:#11461f}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.02em;padding:3px 8px;border-radius:999px;vertical-align:middle}
+.tag.op{background:var(--ok-soft);color:var(--ok)}
+.tag.demo{background:var(--demo-soft);color:var(--demo)}
+.tag.cfg{background:var(--warn-soft);color:var(--warn)}
+.tag.rev{background:#eef0f2;color:#4a5560}
+
+/* Listas */
+ul.clean{list-style:none;padding:0;margin:0}
+ul.ticks li{position:relative;padding-left:28px;margin:6px 0}
+ul.ticks li::before{content:"";position:absolute;left:4px;top:.45em;width:12px;height:12px;border-radius:50%;background:var(--sun)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.check:last-child{border-bottom:0}
+.check input{width:26px;height:26px;flex:none;margin-top:2px;accent-color:var(--brand)}
+.check label{cursor:pointer}
+.progress{height:10px;background:#eee9dc;border-radius:999px;overflow:hidden;margin:8px 0}
+.progress>i{display:block;height:100%;background:var(--brand);width:0}
+details{border:1px solid var(--line);border-radius:12px;background:#fff;margin:10px 0}
+details>summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;align-items:center;gap:10px;min-height:52px}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:"+";margin-left:auto;font-size:1.4rem;color:var(--brand)}
+details[open]>summary::after{content:"–"}
+details>.inner{padding:0 16px 16px}
+.uvbox{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.uvcell{border-radius:12px;padding:12px;background:var(--sun-soft)}
+.uvcell b{display:block;font-size:1.8rem;line-height:1.1}
+.meta{font-size:.85rem;color:var(--muted)}
+table.status{width:100%;border-collapse:collapse;font-size:.95rem}
+table.status th,table.status td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.msg{background:#f7f5ef;border-radius:12px;padding:12px;margin:8px 0;white-space:pre-wrap}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;max-width:92vw;z-index:20;display:none;font-size:.95rem}
+.quiz-q{margin:16px 0;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.quiz-q .opt{display:block;width:100%;text-align:left;margin:6px 0;min-height:48px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;font:inherit;cursor:pointer}
+.quiz-q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.quiz-q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.quiz-q .exp{display:none;margin-top:8px}
+footer{border-top:1px solid var(--line);padding:20px 0;font-size:.9rem;color:var(--muted)}
+footer a{margin-right:12px}
+.view{display:none}
+.view.active{display:block}
+.lead{font-size:1.05rem;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (min-width:640px){ .grid.two{grid-template-columns:1fr 1fr} h1{font-size:1.9rem} }
+@media (max-width:420px){ .row{grid-template-columns:1fr} }
+@media print{ header.top,.proto,footer,.btns,.noprint{display:none!important} body{background:#fff} .card{box-shadow:none} }
+</style>
+</head>
+<body>
+
+<div class="proto" role="note">
+  <div class="wrap">
+    <span><strong>Prototipo pendiente de revisión y validación por la Fundación.</strong> No sustituye la valoración médica.</span>
+    <a href="#estado">Qué funciona y qué no</a>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Piel y Deporte, inicio">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="7" fill="#f2a516"/><g stroke="#f2a516" stroke-width="2.4" stroke-linecap="round"><path d="M17 2v4M17 28v4M2 17h4M28 17h4M6.4 6.4l2.8 2.8M24.8 24.8l2.8 2.8M6.4 27.6l2.8-2.8M24.8 9.2l2.8-2.8"/></g></svg>
+      Piel y Deporte
+    </a>
+    <a class="btn ghost small back" id="backBtn" href="#inicio">← Inicio</a>
+  </div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+
+<!-- ========== INICIO ========== -->
+<section class="view" id="v-inicio" aria-labelledby="t-inicio">
+  <p class="lead">Una herramienta de la propuesta del área de Dermatología y Deporte para disfrutar del deporte protegiendo la piel.</p>
+  <h1 id="t-inicio">¿Qué necesitas hoy?</h1>
+  <div id="pendingSurvey"></div>
+  <div class="grid">
+    <a class="tile" href="#actividad"><span class="ico">ICON_RUN</span><span>Voy a entrenar o competir<small>Tu plan de protección en 1 minuto</small></span></a>
+    <a class="tile" href="#entrenador"><span class="ico">ICON_WHISTLE</span><span>Soy entrenador o monitor<small>Formación breve, listas y mensajes</small></span></a>
+    <a class="tile" href="#organizador"><span class="ico">ICON_FLAG</span><span>Organizo un evento o gestiono un club<small>Lista por fases y textos listos</small></span></a>
+    <a class="tile" href="#lesion"><span class="ico">ICON_SKIN</span><span>Me preocupa una lesión en la piel<small>Signos de alarma y cómo consultar</small></span></a>
+    <a class="tile secondary" href="#despues"><span class="ico">ICON_CHAT</span><span>Después de la actividad: cuéntanos cómo ha ido<small>Encuesta voluntaria y anónima, 1 minuto</small></span></a>
+  </div>
+  <p class="meta" style="margin-top:18px">Sin registro ni instalación. Sin publicidad ni rastreadores. <a href="#fuentes">Fuentes y revisión</a></p>
+</section>
+
+<!-- ========== MÓDULO 1 ========== -->
+<section class="view" id="v-actividad" aria-labelledby="t-act">
+  <h1 id="t-act">Voy a entrenar o competir</h1>
+  <p class="lead">Cuéntanos tu actividad y te preparamos un plan de protección.</p>
+  <form id="actForm" class="card" novalidate>
+    <label class="f" for="a-sport">Deporte</label>
+    <select id="a-sport" required></select>
+
+    <label class="f" for="a-loc">Localidad <span class="hint">(opcional para los datos UV)</span></label>
+    <input type="text" id="a-loc" autocomplete="address-level2" placeholder="Ej.: Granada">
+    <div class="btns" style="margin-top:8px">
+      <button type="button" class="btn ghost small" id="geoBtn">📍 Usar mi ubicación (opcional)</button>
+    </div>
+    <p class="hint" id="geoMsg">La ubicación solo se usa para esta consulta y no se guarda.</p>
+
+    <div class="row">
+      <div><label class="f" for="a-date">Fecha</label><input type="date" id="a-date" required></div>
+      <div><label class="f" for="a-time">Hora de inicio</label><input type="time" id="a-time" required value="10:00"></div>
+    </div>
+    <label class="f" for="a-dur">Duración prevista</label>
+    <select id="a-dur">
+      <option value="30">Hasta 30 min</option><option value="60" selected>1 hora</option><option value="90">1 h 30 min</option>
+      <option value="120">2 horas</option><option value="180">3 horas</option><option value="240">4 horas</option>
+      <option value="360">6 horas</option><option value="480">8 horas o más</option>
+    </select>
+
+    <fieldset style="border:0;padding:0;margin:0">
+      <legend class="f" style="font-weight:700;margin:14px 0 6px">¿Para quién es la actividad?</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="a-who" value="adultos" checked><span>Adultos</span></label>
+        <label class="chip"><input type="radio" name="a-who" value="menores"><span>Menores</span></label>
+      </div>
+    </fieldset>
+    <fieldset style="border:0;padding:0;margin:0">
+      <legend class="f" style="font-weight:700;margin:14px 0 6px">¿Habrá sombra?</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="a-shade" value="si"><span>Sí</span></label>
+        <label class="chip"><input type="radio" name="a-shade" value="parcial" checked><span>Parcial</span></label>
+        <label class="chip"><input type="radio" name="a-shade" value="no"><span>No</span></label>
+      </div>
+    </fieldset>
+    <fieldset style="border:0;padding:0;margin:0">
+      <legend class="f" style="font-weight:700;margin:14px 0 6px">¿Podrás hacer pausas?</legend>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="a-pause" value="si" checked><span>Sí, pausas o avituallamientos</span></label>
+        <label class="chip"><input type="radio" name="a-pause" value="no"><span>No, sin pausas</span></label>
+      </div>
+    </fieldset>
+    <div class="btns"><button class="btn full" type="submit">Crear mi plan de protección</button></div>
+  </form>
+  <div id="planOut" aria-live="polite"></div>
+</section>
+
+<!-- ========== MÓDULO 2 ========== -->
+<section class="view" id="v-entrenador" aria-labelledby="t-ent">
+  <h1 id="t-ent">Soy entrenador o monitor</h1>
+  <p class="lead">Cinco bloques breves. Tu papel: promover hábitos y recomendar consultar. No diagnosticas lesiones.</p>
+  <div class="card">
+    <h2>Formación breve</h2>
+    <div class="progress" aria-hidden="true"><i id="trainBar"></i></div>
+    <p class="meta" id="trainStatus"></p>
+    <div id="trainBlocks"></div>
+  </div>
+  <div class="card">
+    <h2>Lista antes de cada sesión</h2>
+    <div id="coachCheck"></div>
+    <div class="btns"><button class="btn ghost small" id="coachReset">Vaciar lista</button></div>
+  </div>
+  <div class="card">
+    <h2>Mensajes para el equipo y las familias</h2>
+    <div id="coachMsgs"></div>
+  </div>
+  <div class="card">
+    <h2>Cuestionario educativo</h2>
+    <p class="hint">Sirve para repasar; cada respuesta incluye una explicación.</p>
+    <div id="quiz"></div>
+    <p id="quizScore" class="note info" style="display:none"></p>
+  </div>
+  <div class="card">
+    <h2>Registro de formación</h2>
+    <div id="trainRecord"></div>
+  </div>
+</section>
+
+<!-- ========== MÓDULO 3 ========== -->
+<section class="view" id="v-organizador" aria-labelledby="t-org">
+  <h1 id="t-org">Organizo un evento o gestiono un club</h1>
+  <p class="lead">Lista de comprobación por fases. Marca lo que ya tienes resuelto.</p>
+  <div class="card">
+    <h2 id="orgCount">Medidas completadas</h2>
+    <div class="progress" aria-hidden="true"><i id="orgBar"></i></div>
+    <p class="hint">“Medidas completadas” indica lo que tu equipo ha marcado. No es una certificación ni una evaluación oficial.</p>
+    <div id="orgPhases"></div>
+    <div class="btns">
+      <button class="btn" id="orgDownload">Descargar ficha de acciones pendientes</button>
+      <button class="btn ghost" id="orgCopy">Copiar pendientes</button>
+      <button class="btn ghost small" id="orgReset">Vaciar lista</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Textos listos para usar</h2>
+    <div id="orgMsgs"></div>
+  </div>
+  <div class="card">
+    <h2>Si alguien consulta por una lesión en la piel</h2>
+    <div id="orgLesion"></div>
+  </div>
+  <div class="card">
+    <h2>Carteles con código QR</h2>
+    <div id="posterBox"></div>
+  </div>
+</section>
+
+<!-- ========== MÓDULO 4 ========== -->
+<section class="view" id="v-lesion" aria-labelledby="t-les">
+  <h1 id="t-les">Me preocupa una lesión en la piel</h1>
+  <div class="note warn"><strong>Esta guía es educativa y no hace diagnósticos.</strong> Ni esta herramienta ni un cuestionario pueden decir si una lesión es benigna. Si una lesión te preocupa, consúltalo.</div>
+  <div id="lesionContent"></div>
+  <div class="card">
+    <h2>¿Qué hago si tengo una lesión sospechosa?</h2>
+    <div id="lesionAction"></div>
+  </div>
+</section>
+
+<!-- ========== MÓDULO 5 ========== -->
+<section class="view" id="v-despues" aria-labelledby="t-des">
+  <h1 id="t-des">Después de la actividad</h1>
+  <p class="lead">Encuesta voluntaria y breve. No pedimos tu nombre, edad exacta, fotos ni ubicación.</p>
+  <div class="note info">El enrojecimiento puede aparecer horas después. Si prefieres, contéstala mañana.
+    <div class="btns"><button class="btn ghost small" id="remindTomorrow">Recordármelo mañana al abrir la app</button></div>
+  </div>
+  <form id="surveyForm" class="card" novalidate></form>
+  <div class="card">
+    <h2>Tus respuestas</h2>
+    <div id="surveyList"></div>
+  </div>
+</section>
+
+<!-- ========== FUENTES ========== -->
+<section class="view" id="v-fuentes" aria-labelledby="t-fue">
+  <h1 id="t-fue">Fuentes y revisión</h1>
+  <p>Los textos de esta aplicación son de redacción propia. No se han copiado materiales ni imágenes de terceros. Para ampliar información:</p>
+  <div class="card" id="sourcesList"></div>
+  <div class="card">
+    <h2>Estado de revisión de los contenidos</h2>
+    <p class="hint">Se mostrará la fecha real de revisión de cada contenido cuando la Fundación lo valide.</p>
+    <div id="reviewList"></div>
+  </div>
+</section>
+
+<!-- ========== ESTADO ========== -->
+<section class="view" id="v-estado" aria-labelledby="t-est">
+  <h1 id="t-est">Estado del prototipo</h1>
+  <p>Qué está operativo, qué es de demostración y qué requiere configuración o validación antes de publicarse.</p>
+  <p><span class="tag op">Operativo</span> <span class="tag demo">Demostración</span> <span class="tag cfg">Requiere configuración</span> <span class="tag rev">Requiere validación</span></p>
+  <div class="card" style="overflow-x:auto"><table class="status" id="statusTable"></table></div>
+  <div class="card">
+    <h2>Diagnóstico de esta vista</h2>
+    <ul class="clean" id="envDiag"></ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Piel y Deporte · Propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV. Prototipo pendiente de revisión y validación por la Fundación.</p>
+    <p><a href="#fuentes">Fuentes y revisión</a><a href="#estado">Estado del prototipo</a><a href="#inicio">Inicio</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   1. CONFIGURACIÓN  (editar antes de publicar)
+   ===================================================================== */
+const CONFIG = {
+  // URL pública definitiva de la aplicación. Mientras esté vacía, los carteles con QR quedan pendientes.
+  publicUrl: "",
+  // Servicio real de cita o derivación. null = no se ofrece solicitud de cita.
+  appointmentService: null, // ej.: { name: "…", url: "https://…" }
+  // Recogida centralizada de encuestas: desactivada hasta configurar información al participante,
+  // base jurídica, seguridad y, cuando corresponda, revisión ética.
+  centralSurveyCollection: false,
+  // Proveedor UV activo: "open-meteo" (predicción por modelo, pendiente de validación) o "none".
+  uvProvider: "open-meteo",
+  draftDate: "18/11/2026" // fecha de redacción del borrador (no es fecha de revisión clínica)
+};
+
+/* =====================================================================
+   2. CONTENIDOS CLÍNICOS  (texto propio; reviewed: null = pendiente)
+   ===================================================================== */
+const CONTENT = {
+  review: {
+    plan:        { label: "Plan de protección para tu actividad", reviewed: null },
+    coach:       { label: "Formación para entrenadores y monitores", reviewed: null },
+    organizer:   { label: "Lista para eventos y clubes", reviewed: null },
+    lesion:      { label: "Guía de signos de alarma en la piel", reviewed: null },
+    survey:      { label: "Encuesta posterior a la actividad", reviewed: null }
+  },
+  sports: {
+    running:  { label: "Running", zonas: ["orejas","nuca","hombros y escote con camisetas de tirantes","dorso de las manos","labios","raya del pelo o zonas sin pelo del cuero cabelludo"],
+                equip: ["gorra con visera (mejor con cubrenuca)","gafas de sol con filtro UV","camiseta técnica transpirable, mejor con manga"], momentos: "avituallamientos o paradas", extra: "" },
+    ciclismo: { label: "Ciclismo", zonas: ["nuca","orejas","dorso de las manos si usas guantes sin dedos","antebrazos","muslos y rodillas","cuero cabelludo bajo las rejillas del casco","labios"],
+                equip: ["manguitos y perneras con protección UV si hace calor moderado","gafas envolventes con filtro UV","gorra fina bajo el casco"], momentos: "paradas de avituallamiento o descansos", extra: "La sensación de aire fresco al rodar no reduce la radiación UV." },
+    trail:    { label: "Senderismo / trail", zonas: ["nuca y cuello","orejas","nariz","labios","pantorrillas","dorso de las manos"],
+                equip: ["sombrero de ala ancha o gorra con cubrenuca","gafas de sol con filtro UV adecuadas a montaña","ropa ligera de manga larga"], momentos: "paradas para comer, beber o en cumbres", extra: "La radiación UV aumenta con la altitud." },
+    raqueta:  { label: "Tenis / pádel", zonas: ["orejas","nuca","hombros","piernas","dorso de la mano","labios"],
+                equip: ["gorra o visera","gafas deportivas con filtro UV si te resultan cómodas","ropa técnica con manga"], momentos: "cambios de lado o descansos entre sets", extra: "" },
+    golf:     { label: "Golf", zonas: ["orejas","nuca","mano sin guante","antebrazos","labios","cuero cabelludo"],
+                equip: ["sombrero de ala o gorra con cubrenuca","gafas de sol con filtro UV","polo de manga larga ligero"], momentos: "entre hoyos o en el hoyo 9", extra: "Las vueltas suelen ser largas: planifica la reaplicación." },
+    agua:     { label: "Deportes acuáticos", zonas: ["espalda y hombros","orejas","nariz","labios","empeines","parte posterior de las piernas"],
+                equip: ["camiseta o lycra con protección UV","gorra sujeta o sombrero de agua","gafas polarizadas con cordón"], momentos: "cada salida del agua", extra: "El agua refleja parte de la radiación y el baño retira el producto: reaplica al salir." },
+    nieve:    { label: "Nieve", zonas: ["cara, especialmente nariz y pómulos","labios","orejas","mentón y parte inferior de la nariz (por reflexión)","cuello"],
+                equip: ["gafas o máscara envolvente con filtro UV","braga de cuello o pasamontañas","casco o gorro"], momentos: "subidas en remonte o paradas", extra: "La nieve refleja gran parte de la radiación y la altitud la aumenta. Protégete aunque haga frío o esté nublado." },
+    otro:     { label: "Otro deporte al aire libre", zonas: ["orejas","nuca","cuero cabelludo descubierto","labios","dorso de las manos","cualquier zona que deje al aire la equipación"],
+                equip: ["gorra o sombrero","gafas de sol con filtro UV","ropa ligera que cubra hombros y brazos"], momentos: "pausas o cambios", extra: "" }
+  },
+  coachBlocks: [
+    { t: "Radiación UV y deporte", b: [
+      "El índice UV indica la intensidad de la radiación ultravioleta. A partir de 3 se recomiendan medidas de protección.",
+      "Quien entrena al aire libre acumula muchas horas de sol a lo largo del año, también fuera del verano.",
+      "Las nubes no bloquean toda la radiación UV. La altitud y la reflexión en nieve o agua aumentan la exposición.",
+      "Consulta el UV previsto de tu zona (por ejemplo, en AEMET) al planificar la semana." ]},
+    { t: "Horarios, sombra y pausas", b: [
+      "Cuando sea posible, programa las sesiones fuera de las horas centrales del día, cuando el UV suele ser más alto.",
+      "Usa la sombra para explicaciones, esperas, calentamientos estáticos y descansos.",
+      "Incluye pausas: sirven para beber y para reaplicar fotoprotector.",
+      "Si no hay sombra natural, valora toldos, carpas o cambiar la ubicación de la parte estática de la sesión." ]},
+    { t: "Ropa, equipación y fotoprotector", b: [
+      "Primero ropa, gorra o sombrero y gafas con filtro UV; después fotoprotector en lo que queda descubierto.",
+      "Fotoprotector FPS 50+, con protección UVA y resistente al agua, aplicado antes de empezar según las instrucciones del producto.",
+      "Reaplica al menos cada dos horas, y antes si hay baño, sudor intenso o secado con toalla.",
+      "Recuerda las zonas que suelen olvidarse: orejas, nuca, cuero cabelludo, labios y dorso de las manos." ]},
+    { t: "Menores y comunicación con familias", b: [
+      "La infancia y la adolescencia son etapas clave para crear hábitos. Las quemaduras deben evitarse.",
+      "Pide a las familias que traigan gorra, agua y fotoprotector, y que apliquen la primera capa antes de la sesión.",
+      "Organiza la reaplicación en las pausas con supervisión, respetando la autonomía según la edad.",
+      "Da ejemplo: tu propia protección es el mensaje más eficaz." ]},
+    { t: "Signos de alarma y recomendación de consulta", b: [
+      "No diagnosticamos. Si alguien te comenta o ves una lesión nueva, que cambia, que sangra sin motivo o que no cicatriza, recomienda valoración médica.",
+      "Una lesión sospechosa puede no ser oscura ni cumplir todas las reglas.",
+      "No es necesario esperar a la siguiente campaña o revisión programada.",
+      "No hagas fotos ni registres datos de salud del deportista. Indica la guía de esta app y los recursos sanitarios habituales." ]}
+  ],
+  coachChecklist: [
+    "He consultado el UV previsto para la hora de la sesión.",
+    "He revisado si puedo evitar las horas centrales o reducir la parte más expuesta.",
+    "Hay sombra para explicaciones, esperas y descansos.",
+    "He previsto pausas para beber y reaplicar fotoprotector.",
+    "El grupo lleva gorra o sombrero y ropa adecuada.",
+    "Hay fotoprotector disponible (FPS 50+, UVA, resistente al agua) y en buen estado.",
+    "He recordado las zonas olvidadas: orejas, nuca, labios, dorso de las manos.",
+    "Con menores: las familias están informadas y la reaplicación está supervisada."
+  ],
+  coachMsgs: [
+    { t: "Para el equipo, antes de la sesión", m: "Mañana entrenamos al aire libre ☀️ Trae gorra, gafas de sol, agua y tu fotoprotector (FPS 50+, resistente al agua). Aplícalo antes de venir y no olvides orejas, nuca y labios. En las pausas reaplicamos." },
+    { t: "Para las familias", m: "Hola, familias: en las sesiones al aire libre trabajamos la protección solar. Os pedimos que vuestros hijos e hijas traigan gorra, agua y fotoprotector, y que se apliquen la primera capa antes de venir. En las pausas les recordaremos reaplicarlo. ¡Gracias por ayudarnos a crear buenos hábitos!" },
+    { t: "Recordatorio de signos de alarma", m: "Recordatorio: si notas en tu piel una lesión nueva, que cambia, que sangra sin motivo o que no cicatriza, consúltalo con tu médico. No hace falta esperar a una campaña o revisión." }
+  ],
+  quiz: [
+    { q: "¿A partir de qué índice UV se recomiendan habitualmente medidas de protección?", o: ["1","3","6","8"], a: 1,
+      e: "Un índice UV de 3 o más es la señal habitual para activar medidas: ropa, sombra, gafas y fotoprotector." },
+    { q: "Durante una actividad larga con sudor intenso, ¿cuándo se debe reaplicar el fotoprotector?", o: ["Solo una vez al día","Al menos cada dos horas y antes si hay sudor intenso, baño o secado con toalla","Únicamente si aparece enrojecimiento","No hace falta si es resistente al agua"], a: 1,
+      e: "Resistente al agua no significa permanente. Sigue el etiquetado y reaplica al menos cada dos horas y tras sudor intenso, baño o toalla." },
+    { q: "Está nublado y fresco. ¿Hay que protegerse?", o: ["No, sin sol directo no hay radiación UV","Sí, parte de la radiación UV atraviesa las nubes; consulta el UV previsto","Solo en verano","Solo si hay nieve"], a: 1,
+      e: "La temperatura no indica la radiación UV y las nubes no la bloquean por completo. Guíate por el índice UV." },
+    { q: "Un deportista te enseña una mancha que ha cambiado de forma. ¿Qué haces?", o: ["Le digo que parece benigna","Le recomiendo valoración médica sin esperar a la próxima campaña","Le hago una foto para revisarla más tarde","Le digo que espere a ver si desaparece"], a: 1,
+      e: "El entrenador no diagnostica. Ante una lesión que cambia, recomienda valoración médica sin demora." },
+    { q: "¿Qué medida va primero en una sesión al aire libre?", o: ["Solo fotoprotector","Ropa, gorra, gafas, sombra y horario, y fotoprotector en las zonas descubiertas","Broncearse poco a poco","Beber más agua"], a: 1,
+      e: "El fotoprotector complementa, no sustituye, a la ropa, la sombra y la elección de horario." },
+    { q: "¿Por qué la nieve y el agua requieren especial atención?", o: ["Porque reflejan parte de la radiación y aumentan la exposición","Porque enfrían la piel","No requieren atención especial","Porque el fotoprotector no funciona en ellas"], a: 0,
+      e: "La reflexión en nieve o agua, junto a la altitud, aumenta la radiación que recibe la piel, incluso en zonas como la parte inferior de la nariz o el mentón." }
+  ],
+  orgPhases: [
+    { t: "Preparación", items: [
+      "Revisar el horario frente a las horas centrales y consultar el UV previsto (AEMET).",
+      "Prever sombra en salida, meta, zonas de espera, descanso y avituallamiento.",
+      "Prever puntos de fotoprotector, su almacenamiento a la sombra y en lugar fresco, y una persona responsable de reposición.",
+      "Planificar la protección de voluntarios, árbitros y personal: turnos, sombra, gorra, agua y fotoprotector.",
+      "Tener en cuenta a los espectadores: sombra en gradas o zonas de público.",
+      "Designar a una persona de referencia para orientar consultas sobre lesiones de piel." ]},
+    { t: "Inscripción y comunicación previa", items: [
+      "Incluir recomendaciones de fotoprotección y equipación en la guía o reglamento del participante.",
+      "Enviar el correo previo con consejos de protección solar.",
+      "Publicar el mensaje en redes sociales.",
+      "Si hay menores, informar a las familias de lo que deben traer." ]},
+    { t: "Recogida de dorsal o recepción", items: [
+      "Colocar el cartel con QR de la aplicación (cuando esté configurada la URL pública).",
+      "Ofrecer fotoprotector y recordar las zonas olvidadas.",
+      "Informar de dónde estarán la sombra y los puntos de fotoprotector." ]},
+    { t: "Desarrollo de la actividad", items: [
+      "Emitir los mensajes de megafonía en la salida, durante la prueba y en meta.",
+      "Revisar la reposición de fotoprotector en los puntos previstos.",
+      "Comprobar sombra y agua en zonas de espera y avituallamiento.",
+      "Rotar a voluntarios y personal en puestos sin sombra." ]},
+    { t: "Evaluación posterior", items: [
+      "Revisar qué medidas se aplicaron y cuáles faltaron.",
+      "Anotar incidencias de forma agregada, sin datos personales ni de salud identificables.",
+      "Invitar a participantes a la encuesta voluntaria de la aplicación.",
+      "Acordar mejoras para la próxima edición o temporada." ]}
+  ],
+  orgMsgs: [
+    { t: "Megafonía · salida", m: "Buenos días a todos los participantes. Hoy el sol también corre con nosotros: si aún no lo has hecho, aplícate fotoprotector en orejas, nuca, hombros y labios. Encontrarás fotoprotector en la zona de salida. ¡Buena carrera!" },
+    { t: "Megafonía · durante la prueba o en meta", m: "Recordamos al público y a los voluntarios: buscad la sombra cuando podáis, usad gorra y reaplicad fotoprotector. Hay producto disponible en el punto de información." },
+    { t: "Correo previo a participantes", m: "Asunto: Prepárate también para el sol\n\nHola:\n\nEl día de la prueba estaremos varias horas al aire libre. Te recomendamos:\n• Gorra con visera y gafas de sol con filtro UV.\n• Ropa técnica que cubra hombros.\n• Fotoprotector FPS 50+, con protección UVA y resistente al agua, aplicado antes de salir según las instrucciones del producto.\n• Reaplicar en los avituallamientos, al menos cada dos horas, y tras sudar mucho o secarte con toalla.\n\nHabrá fotoprotector y zonas de sombra en salida y meta.\n\n¡Nos vemos en la línea de salida!" },
+    { t: "Redes sociales", m: "☀️ Este domingo, además de las zapatillas, trae tu protección solar: gorra, gafas y fotoprotector FPS 50+ resistente al agua. Orejas, nuca y labios también cuentan. Disfruta del deporte cuidando tu piel. #PielYDeporte" }
+  ],
+  orgLesionSteps: [
+    "Escucha con calma y sin restar importancia a la preocupación.",
+    "No opines sobre si la lesión es benigna o maligna, ni hagas ni pidas fotografías.",
+    "Recomienda valoración médica sin esperar a la siguiente campaña o revisión programada: médico de familia o servicio sanitario habitual.",
+    "Indica la sección “Me preocupa una lesión en la piel” de esta aplicación y la información de Euromelanoma.",
+    "No registres nombre, datos de contacto ni datos de salud de la persona."
+  ],
+  lesion: [
+    { t: "Regla ABCDE", html: "<ul class='ticks'><li><strong>A · Asimetría:</strong> las dos mitades no se parecen.</li><li><strong>B · Bordes</strong> irregulares, mal definidos o dentados.</li><li><strong>C · Color</strong> no uniforme: varios tonos de marrón, negro, rojo, blanco o azulado.</li><li><strong>D · Diámetro</strong> grande o que va aumentando.</li><li><strong>E · Evolución:</strong> cambia de tamaño, forma, color, relieve, o aparecen síntomas como picor o sangrado.</li></ul>" },
+    { t: "El “patito feo”", html: "<p>La mayoría de los lunares de una persona se parecen entre sí. Fíjate en el que es <strong>diferente a los demás</strong>: más oscuro, más claro, de otra forma o que destaca.</p>" },
+    { t: "Lesión nueva o que cambia", html: "<p>Presta atención a una lesión que <strong>aparece nueva</strong>, sobre todo en la edad adulta, o a una que <strong>cambia</strong> con el tiempo. El cambio es uno de los signos más importantes.</p>" },
+    { t: "Crece rápido, sangra o no cicatriza", html: "<ul class='ticks'><li>Un bulto o lesión que <strong>crece rápidamente</strong>.</li><li>Una lesión que <strong>sangra sin motivo</strong> o con roces mínimos.</li><li>Una <strong>herida que no cicatriza</strong> en unas semanas o que se cura y vuelve a abrirse.</li></ul>" },
+    { t: "No todas las lesiones sospechosas son oscuras", html: "<p>Una lesión sospechosa <strong>puede no cumplir todas las reglas</strong> y <strong>puede ser rosada, roja o del color de la piel</strong>. Si algo te preocupa, aunque no encaje en ninguna regla, consúltalo.</p>" }
+  ]
+};
+
+const SOURCES = [
+  { name: "Fundación Piel Sana de la AEDV", url: "https://aedv.es/", note: "Enlace a la web de la AEDV. Pendiente de confirmar por la Fundación la dirección definitiva de la Fundación Piel Sana." },
+  { name: "UV-Derma (app de la Fundación Piel Sana)", url: "https://play.google.com/store/apps/details?id=com.uvderma.uvderma", note: "Enlace pendiente de verificar vigencia por la Fundación." },
+  { name: "AEMPS · Fotoprotección y deporte: “En deportes al aire libre protege tu piel”", url: "https://www.aemps.gob.es/la-aemps/campana-sobre-fotoproteccion-y-deporte-en-deportes-al-aire-libre-protege-tu-piel/" },
+  { name: "OMS · SunSmart Global UV App", url: "https://www.who.int/tools/sunsmart-global-uv-app" },
+  { name: "AEMET · Predicción de radiación ultravioleta (índice UV)", url: "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv" },
+  { name: "AEMET · Interpretación del índice UV", url: "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv/ayuda" },
+  { name: "Euromelanoma (Fundación Piel Sana de la AEDV)", url: "https://euromelanoma.aedv.es/" }
+];
+const AEMET_UV = "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv";
+const EUROMELANOMA = "https://euromelanoma.aedv.es/";
+
+/* =====================================================================
+   3. PROVEEDOR DE DATOS UV  (separado de las reglas)
+   ===================================================================== */
+const UVProviders = {
+  "open-meteo": {
+    name: "Open-Meteo (predicción por modelo)",
+    url: "https://open-meteo.com/",
+    validation: "Fuente pendiente de validación por la Fundación.",
+    async geocode(q){
+      const r = await fetchTimeout("https://geocoding-api.open-meteo.com/v1/search?count=1&language=es&countryCode=ES&name=" + encodeURIComponent(q), 6000);
+      const j = await r.json();
+      if(!j.results || !j.results.length) throw new Error("no-geo");
+      const g = j.results[0];
+      return { lat: g.latitude, lon: g.longitude, label: g.name + (g.admin1 ? ", " + g.admin1 : "") };
+    },
+    async forecast(lat, lon, date){
+      const u = "https://api.open-meteo.com/v1/forecast?hourly=uv_index&daily=uv_index_max&timezone=auto"
+        + "&latitude=" + lat.toFixed(3) + "&longitude=" + lon.toFixed(3) + "&start_date=" + date + "&end_date=" + date;
+      const r = await fetchTimeout(u, 7000);
+      if(!r.ok) throw new Error("http");
+      const j = await r.json();
+      if(!j.hourly || !j.hourly.uv_index) throw new Error("no-data");
+      const hours = j.hourly.time.map((t,i)=>({ h: parseInt(t.slice(11,13),10), uv: j.hourly.uv_index[i] }));
+      return { kind: "Predicción", hours, dailyMax: j.daily && j.daily.uv_index_max ? j.daily.uv_index_max[0] : null,
+               timezone: j.timezone, fetchedAt: new Date(), simulated: false,
+               updateNote: "El proveedor no indica la hora de emisión de la predicción; se muestra la hora de consulta." };
+    }
+  },
+  // Datos SIMULADOS solo para la demostración. Nunca se presentan como reales.
+  demo: {
+    name: "DATOS SIMULADOS (demostración)",
+    async forecast(lat, lon, date){
+      const m = new Date(date + "T12:00").getMonth();
+      const peak = [2,3,5,6,8,9,9,8,6,4,2,2][m];
+      const hours = [];
+      for(let h=0; h<24; h++){ const v = Math.max(0, peak*Math.sin(Math.PI*(h-7)/14)); hours.push({ h, uv: Math.round(v*10)/10 }); }
+      return { kind: "Simulación", hours, dailyMax: peak, timezone: "Europe/Madrid", fetchedAt: new Date(), simulated: true,
+               updateNote: "Valores inventados con una curva genérica para mostrar el funcionamiento. No usar para decidir." };
+    }
+  }
+};
+function fetchTimeout(url, ms){
+  const c = new AbortController(); const id = setTimeout(()=>c.abort(), ms);
+  return fetch(url, { signal: c.signal, credentials: "omit", referrerPolicy: "no-referrer" }).finally(()=>clearTimeout(id));
+}
+function uvCategory(v){
+  if(v == null) return "";
+  if(v < 3) return "Bajo"; if(v < 6) return "Moderado"; if(v < 8) return "Alto"; if(v < 11) return "Muy alto"; return "Extremadamente alto";
+}
+
+/* =====================================================================
+   4. REGLAS DE RECOMENDACIÓN  (sin minutos seguros ni dosis individual)
+   ===================================================================== */
+const RULES = {
+  UV_THRESHOLD: 3,
+  REAPPLY_MAX_MIN: 120,
+  CENTRAL_START: 12, CENTRAL_END: 16, // horas centrales orientativas (hora oficial)
+  build(inp, uv){
+    const sp = CONTENT.sports[inp.sport];
+    const start = toMin(inp.time), end = start + inp.dur;
+    const sH = Math.floor(start/60), eH = Math.ceil(end/60);
+    let windowMax = null;
+    if(uv && uv.hours){
+      const vals = uv.hours.filter(x => x.h >= sH && x.h < Math.max(eH, sH+1)).map(x => x.uv).filter(v => v != null);
+      if(vals.length) windowMax = Math.max(...vals);
+    }
+    const reflective = inp.sport === "nieve" || inp.sport === "agua";
+    const long = inp.dur >= 120;
+    const needFull = windowMax == null || windowMax >= this.UV_THRESHOLD || reflective;
+    const overlapsCentral = start < this.CENTRAL_END*60 && end > this.CENTRAL_START*60;
+    const S = [];
+
+    // Horario
+    const horario = [];
+    if(overlapsCentral) horario.push("Tu actividad coincide con las horas centrales del día, cuando el UV suele ser más alto. Si puedes, adelántala o retrásala, o deja para entonces la parte más tranquila.");
+    else horario.push("Tu horario evita las horas centrales del día: buena elección.");
+    if(windowMax != null && windowMax < this.UV_THRESHOLD && !reflective) horario.push("Con un UV inferior a 3 no suelen ser necesarias medidas especiales, pero el valor puede variar: si la actividad se alarga, revisa el UV.");
+    if(long) horario.push("Una actividad prolongada acumula más exposición: planifica la reaplicación desde el principio.");
+    if(sp.extra) horario.push(sp.extra);
+    S.push({ t: "Horario", items: horario });
+
+    // Sombra
+    const sombra = [];
+    if(inp.shade === "no") sombra.push("No habrá sombra: lleva gorra o sombrero y prioriza ropa que cubra hombros y brazos.");
+    if(inp.shade === "parcial") sombra.push("Aprovecha la sombra disponible para calentar, estirar, esperar y descansar.");
+    if(inp.shade === "si") sombra.push("Usa la sombra en esperas y descansos; recuerda que en sombra también llega parte de la radiación reflejada.");
+    if(reflective) sombra.push("La reflexión en " + (inp.sport === "nieve" ? "la nieve" : "el agua") + " aumenta la exposición, incluso a la sombra.");
+    S.push({ t: "Sombra", items: sombra });
+
+    // Ropa, cabeza y ojos
+    S.push({ t: "Ropa, cabeza y ojos", items: sp.equip.map(cap) });
+
+    // Fotoprotector
+    const foto = [];
+    if(needFull){
+      foto.push("Usa fotoprotector FPS 50+, con protección UVA y resistente al agua, en todas las zonas que queden descubiertas.");
+      foto.push("Aplícalo antes de la actividad siguiendo las instrucciones del producto, en cantidad generosa.");
+      foto.push("Reaplica al menos cada dos horas, y con más frecuencia tras baño, sudor intenso o secado con toalla, según el etiquetado.");
+      foto.push("Protege los labios con un producto labial con filtro solar.");
+    } else {
+      foto.push("Con UV bajo durante toda la actividad, las medidas básicas suelen bastar. Si vas a estar mucho tiempo o el UV sube, aplica fotoprotector FPS 50+ en zonas descubiertas.");
+    }
+    S.push({ t: "Fotoprotector", items: foto });
+
+    // Recordatorios
+    const rem = [], times = [];
+    rem.push("Primera aplicación: antes de empezar (" + fmt(start) + "), con la antelación que indique el producto.");
+    if(needFull){
+      for(let t = start + this.REAPPLY_MAX_MIN; t < end; t += this.REAPPLY_MAX_MIN) times.push(t);
+      if(times.length){
+        times.forEach(t => rem.push(inp.pause === "si"
+          ? "Reaplicación hacia las " + fmt(t) + ": aprovecha la pausa más cercana (" + sp.momentos + ") sin pasar de esa hora."
+          : "Reaplicación hacia las " + fmt(t) + ": planifica una parada breve o aprovecha una transición."));
+      } else rem.push("Si te bañas, sudas mucho o te secas con toalla, reaplica en la siguiente pausa.");
+      if(inp.sport === "agua") rem.push("Reaplica cada vez que salgas del agua y te seques.");
+    }
+    rem.push("No manipules el móvil mientras practicas: pon los avisos para que coincidan con pausas, o confía en el material preparado.");
+    if(inp.pause === "no" && long) rem.push("Sin pausas y con más de dos horas, valora incluir al menos una parada para reaplicar.");
+    S.push({ t: "Recordatorios", items: rem });
+
+    // Zonas olvidadas
+    S.push({ t: "Zonas que suelen olvidarse", items: sp.zonas.map(cap) });
+
+    // Menores
+    if(inp.who === "menores"){
+      S.push({ t: "Si participan menores", items: [
+        "Prioriza horario, sombra, gorra y ropa; el fotoprotector completa la protección.",
+        "Una persona adulta supervisa la aplicación y la reaplicación en las pausas.",
+        "Informa a las familias de lo que deben traer y de que apliquen la primera capa antes de la actividad.",
+        "Los bebés y la primera infancia no deben exponerse directamente al sol; consulta con pediatría sobre el fotoprotector adecuado."
+      ]});
+    }
+
+    // Material
+    const mat = ["Fotoprotector FPS 50+, con protección UVA y resistente al agua (formato fácil de llevar)", "Protector labial con filtro solar", ...sp.equip.map(cap), "Agua"];
+    if(inp.sport === "agua" || inp.sport === "nieve") mat.push("Toalla pequeña para secarte antes de reaplicar");
+    if(inp.who === "menores") mat.push("Fotoprotector de reserva para el grupo");
+    S.push({ t: "Material para llevar", items: mat, check: true });
+
+    return { sections: S, windowMax, reminderTimes: times, start, end, needFull };
+  }
+};
+function toMin(t){ const [h,m] = t.split(":").map(Number); return h*60 + (m||0); }
+function fmt(min){ min = ((min % 1440) + 1440) % 1440; return String(Math.floor(min/60)).padStart(2,"0") + ":" + String(min%60).padStart(2,"0"); }
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* =====================================================================
+   5. UTILIDADES: almacenamiento local, descargas, copiar, aviso
+   ===================================================================== */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem("pyd_" + k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("pyd_" + k, JSON.stringify(v)); return true; }catch(e){ return false; } },
+  del(k){ try{ localStorage.removeItem("pyd_" + k); }catch(e){} },
+  ok(){ try{ localStorage.setItem("pyd__t","1"); localStorage.removeItem("pyd__t"); return true; }catch(e){ return false; } }
+};
+let DL = null; // capacidad de descargas del entorno de Claude (si existe)
+try{ if(window.claude && window.claude.use){ window.claude.use("downloads").then(d => { DL = d; renderDiag(); }).catch(()=>{}); } }catch(e){}
+
+function toast(t){ const el = document.getElementById("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast._t); toast._t = setTimeout(()=>el.style.display="none", 3800); }
+async function offerFile(filename, data, mime){
+  const ext = filename.split(".").pop().toLowerCase();
+  const allowed = ["png","txt","html","md","json","csv","pdf"];
+  if(DL && allowed.includes(ext)){
+    try{ await DL.save({ filename, data }); toast("Archivo listo: " + filename); return true; }
+    catch(e){ if(e && e.code === "declined"){ toast("Descarga cancelada."); return false; } }
+  }
+  try{
+    const blob = data instanceof Blob ? data : new Blob([data], { type: mime || "text/plain;charset=utf-8" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    toast("Si la descarga no empieza, esta vista no permite descargas. Prueba “Copiar”.");
+    return true;
+  }catch(e){ toast("Esta vista no permite descargar archivos."); return false; }
+}
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); toast("Copiado al portapapeles."); }
+  catch(e){
+    const ta = document.createElement("textarea"); ta.value = t; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+    let ok = false; try{ ok = document.execCommand("copy"); }catch(_){}
+    ta.remove(); toast(ok ? "Copiado al portapapeles." : "No se ha podido copiar en esta vista.");
+  }
+}
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function reviewTag(key){
+  const r = CONTENT.review[key];
+  return r && r.reviewed ? "<span class='tag op'>Revisado el " + esc(r.reviewed) + "</span>" : "<span class='tag rev'>Pendiente de revisión clínica</span>";
+}
+function msgBlock(list){
+  return list.map((x,i) => "<div><h3 style='margin-top:12px'>" + esc(x.t) + "</h3><div class='msg' id='m"+Math.random().toString(36).slice(2,8)+"'>" + esc(x.m) + "</div><button class='btn ghost small' data-copy='" + i + "'>Copiar</button></div>").join("");
+}
+function wireCopy(container, list){
+  container.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => copyText(list[+b.dataset.copy].m)));
+}
+
+/* Iconos (SVG inline con texto siempre al lado) */
+const ICONS = {
+  ICON_RUN: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="M8 21l3-6 3 2v4M6 12l3-4 4 1 3 3 3 1"/></svg>',
+  ICON_WHISTLE: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="15" r="5"/><path d="M12 11l9-3v4l-7 2M3 5l3 3M8 3l1 4"/></svg>',
+  ICON_FLAG: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+  ICON_SKIN: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/><circle cx="11" cy="11" r="1.8" fill="currentColor"/></svg>',
+  ICON_CHAT: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/></svg>'
+};
+document.querySelectorAll(".ico").forEach(el => { const k = el.textContent.trim(); if(ICONS[k]) el.innerHTML = ICONS[k]; });
+
+/* =====================================================================
+   6. NAVEGACIÓN
+   ===================================================================== */
+const VIEWS = ["inicio","actividad","entrenador","organizador","lesion","despues","fuentes","estado"];
+function route(){
+  let h = (location.hash || "#inicio").slice(1);
+  if(!VIEWS.includes(h)) h = "inicio";
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "v-" + h));
+  document.getElementById("backBtn").style.display = h === "inicio" ? "none" : "inline-flex";
+  if(h === "inicio") renderPending();
+  if(h === "estado") renderDiag();
+  window.scrollTo(0,0);
+  const m = document.getElementById("main"); try{ m.focus({ preventScroll: true }); }catch(e){}
+}
+window.addEventListener("hashchange", route);
+
+/* =====================================================================
+   7. MÓDULO 1 · ACTIVIDAD Y PLAN
+   ===================================================================== */
+let geoCoords = null; // solo en memoria, nunca se guarda
+(function initActivity(){
+  const sel = document.getElementById("a-sport");
+  Object.entries(CONTENT.sports).forEach(([k,v]) => { const o = document.createElement("option"); o.value = k; o.textContent = v.label; sel.appendChild(o); });
+  const d = new Date(); document.getElementById("a-date").value = d.toISOString().slice(0,10);
+
+  const geoAllowed = (() => { try{ const pp = document.permissionsPolicy || document.featurePolicy; return pp && pp.allowsFeature ? pp.allowsFeature("geolocation") : true; }catch(e){ return true; } })();
+  if(!geoAllowed){
+    const gb = document.getElementById("geoBtn"); gb.disabled = true;
+    document.getElementById("geoMsg").innerHTML = "<strong>Ubicación no disponible en esta vista previa.</strong> El visor de Claude bloquea el acceso a la ubicación; funcionará cuando la app se publique en su propia dirección web. Escribe la localidad.";
+  }
+  document.getElementById("geoBtn").addEventListener("click", () => {
+    const msg = document.getElementById("geoMsg");
+    if(!("geolocation" in navigator)){ msg.textContent = "Tu navegador no permite la geolocalización. Escribe la localidad."; return; }
+    msg.textContent = "Solicitando ubicación…";
+    navigator.geolocation.getCurrentPosition(
+      p => { geoCoords = { lat: p.coords.latitude, lon: p.coords.longitude };
+             msg.textContent = "Ubicación aproximada obtenida (" + geoCoords.lat.toFixed(2) + ", " + geoCoords.lon.toFixed(2) + "). Solo se usa para esta consulta y no se guarda."; },
+      err => { msg.textContent = err && err.code === 1
+                 ? "No se ha concedido el permiso de ubicación (o esta vista lo bloquea). Puedes activarlo en los ajustes del navegador o escribir la localidad."
+                 : err && err.code === 3 ? "La ubicación ha tardado demasiado. Inténtalo de nuevo o escribe la localidad."
+                 : "No se ha podido obtener la ubicación. Escribe la localidad."; },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 });
+  });
+
+  document.getElementById("actForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const inp = readActivity();
+    if(!inp.date || !inp.time){ toast("Indica fecha y hora de inicio."); return; }
+    const out = document.getElementById("planOut");
+    out.innerHTML = "<div class='card'><p>Preparando tu plan…</p></div>";
+    const uvRes = await getUV(inp);
+    renderPlan(inp, uvRes);
+  });
+})();
+function readActivity(){
+  const v = n => (document.querySelector("input[name='" + n + "']:checked") || {}).value;
+  return { sport: document.getElementById("a-sport").value, loc: document.getElementById("a-loc").value.trim(),
+           date: document.getElementById("a-date").value, time: document.getElementById("a-time").value,
+           dur: parseInt(document.getElementById("a-dur").value, 10), who: v("a-who"), shade: v("a-shade"), pause: v("a-pause") };
+}
+async function getUV(inp, forceDemo){
+  if(forceDemo){ const d = await UVProviders.demo.forecast(0,0,inp.date); return { ok: true, data: d, provider: UVProviders.demo, place: "Ubicación de ejemplo" }; }
+  const p = UVProviders[CONFIG.uvProvider];
+  if(!p) return { ok: false, reason: "Sin proveedor UV configurado." };
+  try{
+    let place, lat, lon;
+    if(geoCoords){ lat = geoCoords.lat; lon = geoCoords.lon; place = "Tu ubicación aproximada"; }
+    else if(inp.loc){ const g = await p.geocode(inp.loc); lat = g.lat; lon = g.lon; place = g.label; }
+    else return { ok: false, reason: "No has indicado localidad." };
+    const data = await p.forecast(lat, lon, inp.date);
+    const hasHour = data.hours.some(x => x.uv != null);
+    if(!hasHour) return { ok: false, reason: "El proveedor no ofrece datos para esa fecha." };
+    return { ok: true, data, provider: p, place };
+  }catch(err){
+    return { ok: false, reason: err && err.message === "no-geo" ? "No se ha encontrado la localidad." : "No hay conexión con la fuente de datos UV desde esta vista." };
+  }
+}
+let lastPlan = null;
+function renderPlan(inp, uvRes){
+  const uv = uvRes.ok ? uvRes.data : null;
+  const plan = RULES.build(inp, uv);
+  const sp = CONTENT.sports[inp.sport];
+  lastPlan = { inp, uvRes, plan };
+  let uvHtml = "";
+  if(uvRes.ok){
+    const sim = uv.simulated;
+    uvHtml = "<div class='" + (sim ? "note demo" : "card") + "'>"
+      + (sim ? "<p><strong>DATOS SIMULADOS · solo para demostración.</strong> No corresponden a ningún lugar ni fecha reales.</p>" : "")
+      + "<h3>Información UV</h3>"
+      + "<div class='uvbox'><div class='uvcell'><span class='meta'>" + (sim ? "Simulado · " : "") + uv.kind + " horaria durante tu actividad (máximo)</span><b>" + (plan.windowMax != null ? plan.windowMax.toFixed(1) : "—") + "</b>" + uvCategory(plan.windowMax) + "</div>"
+      + "<div class='uvcell'><span class='meta'>" + (sim ? "Simulado · " : "") + "Máximo diario previsto (no es el valor de tu hora)</span><b>" + (uv.dailyMax != null ? uv.dailyMax.toFixed(1) : "—") + "</b>" + uvCategory(uv.dailyMax) + "</div></div>"
+      + "<p class='meta'>Proveedor: " + esc(uvRes.provider.name) + (uvRes.provider.validation ? " · " + esc(uvRes.provider.validation) : "")
+      + "<br>Ubicación: " + esc(uvRes.place) + " · Fecha: " + esc(inp.date) + " · Franja: " + fmt(plan.start) + "–" + fmt(plan.end)
+      + "<br>Consultado: " + uv.fetchedAt.toLocaleString("es-ES") + ". " + esc(uv.updateNote) + "</p>"
+      + "<p class='meta'>Tipo de dato: " + (sim ? "simulación" : "predicción, no medición") + ". Contrasta con <a href='" + AEMET_UV + "' target='_blank' rel='noopener'>AEMET</a>.</p></div>";
+  } else {
+    uvHtml = "<div class='note warn'><strong>Datos UV no disponibles.</strong> " + esc(uvRes.reason)
+      + " Consulta la <a href='" + AEMET_UV + "' target='_blank' rel='noopener'>predicción del índice UV de AEMET</a> para tu localidad. Mientras tanto, te damos recomendaciones generales: si el UV es 3 o más, aplica todas las medidas."
+      + "<div class='btns'><button class='btn ghost small' id='demoUV'>Ver ejemplo con datos simulados</button></div></div>";
+  }
+  const secs = plan.sections.map(s => "<h3 style='margin-top:16px'>" + esc(s.t) + "</h3>"
+    + (s.check ? "<ul class='clean'>" + s.items.map((x,i)=>"<li class='check'><input type='checkbox' id='mat"+i+"'><label for='mat"+i+"'>"+esc(x)+"</label></li>").join("") + "</ul>"
+               : "<ul class='ticks'>" + s.items.map(x=>"<li>"+esc(x)+"</li>").join("") + "</ul>")).join("");
+  const out = document.getElementById("planOut");
+  out.innerHTML = "<div class='card' id='planCard'><h2>Plan de protección para tu actividad</h2>"
+    + "<p class='meta'>" + esc(sp.label) + " · " + esc(inp.date) + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ") · " + (inp.who === "menores" ? "Menores" : "Adultos") + " · " + reviewTag("plan") + "</p>"
+    + uvHtml
+    + "<p class='note info'>Este plan no calcula “minutos seguros al sol” ni tiempo hasta quemadura: la respuesta de cada piel es distinta y el UV cambia.</p>"
+    + secs
+    + "<div class='btns noprint'><button class='btn' id='pngBtn'>Guardar como imagen</button><button class='btn ghost' id='htmlBtn'>Descargar ficha</button><button class='btn ghost' id='shareBtn'>Copiar plan</button></div>"
+    + "<div class='noprint' style='margin-top:16px'><h3>Recordatorios en tu calendario (opcional)</h3>"
+    + "<p class='hint'>Descarga un archivo de calendario con los avisos de aplicación y reaplicación. Que recibas el aviso depende de tu calendario y de tu dispositivo.</p>"
+    + "<div class='btns'><button class='btn ghost small' id='icsBtn'>Descargar recordatorios (.ics)</button><button class='btn ghost small' id='icsCopy'>Copiar horarios</button></div></div></div>";
+  const demo = document.getElementById("demoUV");
+  if(demo) demo.addEventListener("click", async () => renderPlan(inp, await getUV(inp, true)));
+  document.getElementById("pngBtn").addEventListener("click", async () => { const b = await planPNG(); if(b) offerFile("plan-proteccion.png", b, "image/png"); });
+  document.getElementById("htmlBtn").addEventListener("click", () => offerFile("plan-proteccion.html", planHTML(), "text/html;charset=utf-8"));
+  document.getElementById("shareBtn").addEventListener("click", () => copyText(planText()));
+  document.getElementById("icsBtn").addEventListener("click", () => offerFile("recordatorios-fotoproteccion.ics", planICS(), "text/calendar;charset=utf-8"));
+  document.getElementById("icsCopy").addEventListener("click", () => copyText(reminderText()));
+  out.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function durTxt(m){ return m < 60 ? m + " min" : (m % 60 ? Math.floor(m/60) + " h " + (m%60) + " min" : (m/60) + " h"); }
+function uvLine(){
+  const { uvRes, plan } = lastPlan;
+  if(!uvRes.ok) return "Datos UV no disponibles. Consulta AEMET: " + AEMET_UV;
+  const u = uvRes.data;
+  return (u.simulated ? "[DATOS SIMULADOS – DEMOSTRACIÓN] " : "") + u.kind + " UV horaria máx. en tu franja: " + (plan.windowMax != null ? plan.windowMax.toFixed(1) : "—")
+    + " · Máximo diario previsto: " + (u.dailyMax != null ? u.dailyMax.toFixed(1) : "—") + " · Fuente: " + uvRes.provider.name + " · " + uvRes.place + " · consultado " + u.fetchedAt.toLocaleString("es-ES");
+}
+function planText(){
+  const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
+  let t = "PLAN DE PROTECCIÓN · Piel y Deporte\n" + sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")\n" + uvLine() + "\n";
+  plan.sections.forEach(s => { t += "\n" + s.t.toUpperCase() + "\n" + s.items.map(x => (s.check ? "☐ " : "• ") + x).join("\n") + "\n"; });
+  t += "\nPrototipo pendiente de revisión y validación por la Fundación. No sustituye la valoración médica.";
+  return t;
+}
+function planHTML(){
+  const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
+  return "<!DOCTYPE html><html lang='es'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Plan de protección</title>"
+    + "<style>body{font:16px/1.5 system-ui,sans-serif;max-width:680px;margin:24px auto;padding:0 16px;color:#1b2a33}h1{color:#0b6e6e}h2{font-size:1.1rem;margin-top:1.2em}.m{color:#51616b;font-size:.9rem}.n{background:#fff4dc;padding:10px;border-radius:8px}</style></head><body>"
+    + "<p class='n'>Prototipo pendiente de revisión y validación por la Fundación.</p><h1>Plan de protección para tu actividad</h1>"
+    + "<p class='m'>" + esc(sp.label) + " · " + esc(inp.date) + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")</p><p class='m'>" + esc(uvLine()) + "</p>"
+    + plan.sections.map(s => "<h2>" + esc(s.t) + "</h2><ul>" + s.items.map(x => "<li>" + (s.check ? "☐ " : "") + esc(x) + "</li>").join("") + "</ul>").join("")
+    + "<p class='m'>Este plan no calcula tiempo seguro al sol. No sustituye la valoración médica.</p></body></html>";
+}
+function reminderText(){
+  const { plan } = lastPlan;
+  const r = ["Aplicar fotoprotector antes de empezar (" + fmt(plan.start) + ")"];
+  plan.reminderTimes.forEach(t => r.push("Reaplicar hacia las " + fmt(t) + " (en la pausa más próxima)"));
+  return r.join("\n");
+}
+function planICS(){
+  const { inp, plan } = lastPlan;
+  const d = inp.date.replace(/-/g,"");
+  const stamp = new Date().toISOString().replace(/[-:]/g,"").slice(0,15) + "Z";
+  const ev = (min, title) => { const h = fmt(min).replace(":",""); return ["BEGIN:VEVENT","UID:" + d + h + Math.random().toString(36).slice(2,8) + "@pielydeporte","DTSTAMP:" + stamp,
+    "DTSTART:" + d + "T" + h + "00","DURATION:PT10M","SUMMARY:" + title,"DESCRIPTION:Piel y Deporte (prototipo). Hazlo en una pausa; no uses el móvil durante la práctica.",
+    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:" + title,"TRIGGER:-PT0M","END:VALARM","END:VEVENT"].join("\r\n"); };
+  const evs = [ev(plan.start - 15, "Aplicar fotoprotector antes de la actividad")];
+  plan.reminderTimes.forEach(t => evs.push(ev(t - 10, "Reaplicar fotoprotector en la próxima pausa")));
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Piel y Deporte//Prototipo//ES","CALSCALE:GREGORIAN", ...evs, "END:VCALENDAR"].join("\r\n");
+}
+async function planPNG(){
+  const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
+  const W = 1080, P = 64, c = document.createElement("canvas"), x = c.getContext("2d");
+  const font = (s, b) => (b ? "700 " : "400 ") + s + "px 'Atkinson Hyperlegible', system-ui, sans-serif";
+  const lines = [];
+  const push = (t, s, b, col, gap) => lines.push({ t, s, b, col: col || "#1b2a33", gap: gap || 0 });
+  push("Prototipo pendiente de revisión y validación por la Fundación", 24, true, "#7a5200");
+  push("Plan de protección para tu actividad", 48, true, "#0b6e6e", 20);
+  push(sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")", 28, false, "#51616b", 8);
+  push(uvLine(), 24, false, lastPlan.uvRes.ok && lastPlan.uvRes.data.simulated ? "#6b3fa0" : "#51616b", 8);
+  plan.sections.forEach(s => { push(s.t, 32, true, "#0b6e6e", 26); s.items.forEach(i => push((s.check ? "☐ " : "• ") + i, 26, false)); });
+  push("No calcula tiempo seguro al sol. No sustituye la valoración médica.", 22, false, "#51616b", 26);
+  // medir con ajuste de línea
+  const wrapped = [];
+  lines.forEach(l => { x.font = font(l.s, l.b); const words = l.t.split(" "); let cur = ""; let first = true;
+    words.forEach(w => { const test = cur ? cur + " " + w : w; if(x.measureText(test).width > W - 2*P && cur){ wrapped.push({ ...l, t: cur, gap: first ? l.gap : 0 }); first = false; cur = w; } else cur = test; });
+    wrapped.push({ ...l, t: cur, gap: first ? l.gap : 0 }); });
+  let H = P + 30; wrapped.forEach(l => H += l.gap + l.s * 1.45); H += P;
+  c.width = W; c.height = Math.ceil(H);
+  x.fillStyle = "#fbfaf6"; x.fillRect(0,0,W,c.height);
+  x.fillStyle = "#f2a516"; x.fillRect(0,0,W,14);
+  let y = P;
+  wrapped.forEach(l => { y += l.gap + l.s * 1.2; x.font = font(l.s, l.b); x.fillStyle = l.col; x.fillText(l.t, P, y); y += l.s * 0.25; });
+  return await new Promise(r => c.toBlob(b => r(b), "image/png"));
+}
+
+/* =====================================================================
+   8. MÓDULO 2 · ENTRENADORES
+   ===================================================================== */
+function renderTraining(){
+  const rec = store.get("formacion", { blocks: [], quiz: null, done: null });
+  const box = document.getElementById("trainBlocks");
+  box.innerHTML = CONTENT.coachBlocks.map((b,i) => "<details><summary>" + (rec.blocks.includes(i) ? "✅ " : "") + (i+1) + ". " + esc(b.t) + "</summary><div class='inner'><ul class='ticks'>"
+    + b.b.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul><button class='btn small' data-blk='" + i + "'>" + (rec.blocks.includes(i) ? "Bloque leído" : "Marcar como leído") + "</button></div></details>").join("")
+    + "<p class='meta' style='margin-top:8px'>" + reviewTag("coach") + "</p>";
+  box.querySelectorAll("[data-blk]").forEach(b => b.addEventListener("click", () => {
+    const r = store.get("formacion", { blocks: [], quiz: null, done: null }); const i = +b.dataset.blk;
+    if(!r.blocks.includes(i)) r.blocks.push(i); store.set("formacion", r); renderTraining(); }));
+  const pct = Math.round((rec.blocks.length + (rec.quiz != null ? 1 : 0)) / (CONTENT.coachBlocks.length + 1) * 100);
+  document.getElementById("trainBar").style.width = pct + "%";
+  document.getElementById("trainStatus").textContent = rec.blocks.length + " de " + CONTENT.coachBlocks.length + " bloques leídos · Cuestionario: " + (rec.quiz != null ? "hecho (" + rec.quiz + "/" + CONTENT.quiz.length + ")" : "pendiente");
+  // registro
+  const all = rec.blocks.length === CONTENT.coachBlocks.length && rec.quiz != null;
+  if(all && !rec.done){ rec.done = new Date().toLocaleDateString("es-ES"); store.set("formacion", rec); }
+  document.getElementById("trainRecord").innerHTML = (all
+    ? "<div class='note ok'><strong>Formación completada el " + esc(rec.done) + ".</strong></div>"
+    : "<p>Completa los cinco bloques y el cuestionario para registrar la formación.</p>")
+    + "<p class='hint'>Registro local guardado solo en este dispositivo. No es una acreditación ni un certificado oficial.</p>"
+    + (store.ok() ? "" : "<p class='note warn'>Este navegador no permite guardar datos locales: el registro no se conservará al cerrar.</p>")
+    + "<div class='btns'><button class='btn ghost small' id='trainReset'>Borrar mi registro</button></div>";
+  document.getElementById("trainReset").addEventListener("click", () => { store.del("formacion"); renderTraining(); renderQuiz(); });
+}
+function renderChecklist(containerId, key, items){
+  const st = store.get(key, {});
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map((t,i) => "<div class='check'><input type='checkbox' id='" + key + i + "' " + (st[i] ? "checked" : "") + "><label for='" + key + i + "'>" + esc(t) + "</label></div>").join("");
+  el.querySelectorAll("input").forEach((cb,i) => cb.addEventListener("change", () => { const s = store.get(key, {}); s[i] = cb.checked; store.set(key, s); }));
+}
+function renderQuiz(){
+  const el = document.getElementById("quiz"); const answers = {};
+  document.getElementById("quizScore").style.display = "none";
+  el.innerHTML = CONTENT.quiz.map((q,i) => "<div class='quiz-q'><p><strong>" + (i+1) + ". " + esc(q.q) + "</strong></p>"
+    + q.o.map((o,j) => "<button class='opt' data-q='" + i + "' data-o='" + j + "'>" + esc(o) + "</button>").join("")
+    + "<div class='exp note info' id='exp" + i + "'>" + esc(q.e) + "</div></div>").join("");
+  el.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.q, j = +b.dataset.o; if(answers[i] != null) return;
+    answers[i] = j; const q = CONTENT.quiz[i];
+    el.querySelectorAll(".opt[data-q='" + i + "']").forEach(x => { const k = +x.dataset.o; if(k === q.a) x.classList.add("right"); else if(k === j) x.classList.add("wrong"); x.setAttribute("aria-disabled","true"); });
+    document.getElementById("exp" + i).style.display = "block";
+    if(Object.keys(answers).length === CONTENT.quiz.length){
+      const score = Object.entries(answers).filter(([k,v]) => CONTENT.quiz[k].a === v).length;
+      const s = document.getElementById("quizScore"); s.style.display = "block";
+      s.textContent = "Has acertado " + score + " de " + CONTENT.quiz.length + ". Repasa las explicaciones de las que hayas fallado.";
+      const r = store.get("formacion", { blocks: [], quiz: null, done: null }); r.quiz = score; store.set("formacion", r); renderTraining();
+    }
+  }));
+}
+
+/* =====================================================================
+   9. MÓDULO 3 · ORGANIZADORES
+   ===================================================================== */
+function renderOrg(){
+  const st = store.get("org", {});
+  const el = document.getElementById("orgPhases");
+  el.innerHTML = CONTENT.orgPhases.map((p,pi) => {
+    const done = p.items.filter((_,i) => st[pi + "_" + i]).length;
+    return "<details " + (pi === 0 ? "open" : "") + "><summary>" + esc(p.t) + " <span class='meta' style='margin-left:6px'>" + done + "/" + p.items.length + "</span></summary><div class='inner'>"
+      + p.items.map((t,i) => "<div class='check'><input type='checkbox' id='o" + pi + "_" + i + "' data-k='" + pi + "_" + i + "' " + (st[pi + "_" + i] ? "checked" : "") + "><label for='o" + pi + "_" + i + "'>" + esc(t) + "</label></div>").join("")
+      + "</div></details>"; }).join("") + "<p class='meta'>" + reviewTag("organizer") + "</p>";
+  el.querySelectorAll("input").forEach(cb => cb.addEventListener("change", () => { const s = store.get("org", {}); s[cb.dataset.k] = cb.checked; store.set("org", s); updateOrgCount(); const sum = cb.closest("details").querySelector("summary .meta"); const all = cb.closest(".inner").querySelectorAll("input"); sum.textContent = [...all].filter(x=>x.checked).length + "/" + all.length; }));
+  updateOrgCount();
+}
+function updateOrgCount(){
+  const st = store.get("org", {}); const total = CONTENT.orgPhases.reduce((a,p) => a + p.items.length, 0);
+  const done = Object.values(st).filter(Boolean).length;
+  document.getElementById("orgCount").textContent = "Medidas completadas: " + done + " de " + total;
+  document.getElementById("orgBar").style.width = Math.round(done/total*100) + "%";
+}
+function orgPendingText(){
+  const st = store.get("org", {});
+  let t = "ACCIONES PENDIENTES · Piel y Deporte\nGenerado el " + new Date().toLocaleString("es-ES") + "\n";
+  CONTENT.orgPhases.forEach((p,pi) => { const pend = p.items.filter((_,i) => !st[pi + "_" + i]); if(pend.length) t += "\n" + p.t.toUpperCase() + "\n" + pend.map(x => "☐ " + x).join("\n") + "\n"; });
+  t += "\n“Medidas completadas” refleja lo marcado por el equipo organizador; no es una certificación.\nPrototipo pendiente de revisión y validación por la Fundación.";
+  return t;
+}
+function renderPoster(){
+  const box = document.getElementById("posterBox");
+  if(!CONFIG.publicUrl){
+    box.innerHTML = "<div class='note warn'><strong>Pendiente de configuración.</strong> Los carteles con QR se activarán cuando la aplicación tenga su dirección pública definitiva. No se genera ningún QR con direcciones provisionales o ficticias.</div>"
+      + "<p class='hint'>El QR solo contendrá la dirección pública de la aplicación, sin datos personales.</p>"
+      + "<div class='btns'><button class='btn' disabled>Descargar cartel con QR</button></div>";
+    return;
+  }
+  box.innerHTML = "<p>Cartel con QR a <strong>" + esc(CONFIG.publicUrl) + "</strong>.</p><div class='btns'><button class='btn' id='posterBtn'>Descargar cartel con QR</button></div>";
+  document.getElementById("posterBtn").addEventListener("click", async () => {
+    try{ await loadScript("https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"); }catch(e){ toast("No se ha podido cargar el generador de QR."); return; }
+    const qr = qrcode(0, "M"); qr.addData(CONFIG.publicUrl); qr.make();
+    const W = 1240, H = 1754, c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+    x.fillStyle = "#fbfaf6"; x.fillRect(0,0,W,H); x.fillStyle = "#f2a516"; x.fillRect(0,0,W,40);
+    x.fillStyle = "#0b6e6e"; x.font = "700 110px system-ui"; x.fillText("Piel y Deporte", 90, 240);
+    x.fillStyle = "#1b2a33"; x.font = "400 52px system-ui"; x.fillText("Disfruta del deporte cuidando tu piel", 90, 330);
+    ["Gorra, gafas y ropa que cubra","Fotoprotector FPS 50+ resistente al agua","Reaplica en las pausas","Orejas, nuca y labios también cuentan"].forEach((t,i) => { x.font = "400 46px system-ui"; x.fillText("• " + t, 90, 450 + i*80); });
+    const n = qr.getModuleCount(), size = 640, cell = Math.floor(size/n), ox = (W - cell*n)/2, oy = 820;
+    x.fillStyle = "#fff"; x.fillRect(ox-40, oy-40, cell*n+80, cell*n+80); x.fillStyle = "#000";
+    for(let r=0;r<n;r++) for(let k=0;k<n;k++) if(qr.isDark(r,k)) x.fillRect(ox+k*cell, oy+r*cell, cell, cell);
+    x.fillStyle = "#1b2a33"; x.font = "700 44px system-ui"; x.textAlign = "center"; x.fillText("Escanea y crea tu plan de protección", W/2, oy + cell*n + 110);
+    x.font = "400 30px system-ui"; x.fillStyle = "#51616b"; x.fillText("Sin registro ni instalación", W/2, oy + cell*n + 160);
+    c.toBlob(b => offerFile("cartel-piel-y-deporte.png", b, "image/png"), "image/png");
+  });
+}
+function loadScript(src){ return new Promise((res, rej) => { if(window.qrcode) return res(); const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+
+/* =====================================================================
+   10. MÓDULO 4 · LESIONES
+   ===================================================================== */
+function renderLesion(){
+  document.getElementById("lesionContent").innerHTML = CONTENT.lesion.map(l => "<div class='card'><h2>" + esc(l.t) + "</h2>" + l.html + "</div>").join("")
+    + "<p class='meta'>" + reviewTag("lesion") + "</p>";
+  let a = "<ul class='ticks'><li><strong>Pide valoración médica sin esperar</strong> a la siguiente campaña o revisión programada.</li>"
+    + "<li>Puedes pedir cita con tu <strong>médico o médica de familia</strong> en tu centro de salud, por los canales habituales de tu servicio de salud.</li>"
+    + "<li>Si ya estás en seguimiento en dermatología, contacta con tu servicio por la vía que te hayan indicado.</li>"
+    + "<li>Si la lesión sangra de forma abundante o tienes dudas urgentes, utiliza los recursos sanitarios de urgencia habituales.</li>"
+    + "<li>Mientras tanto, observa la lesión y anota cuándo la notaste y qué cambios has visto; te ayudará en la consulta.</li></ul>"
+    + "<p>Más información sobre autoexploración y prevención en <a href='" + EUROMELANOMA + "' target='_blank' rel='noopener'>Euromelanoma (Fundación Piel Sana de la AEDV)</a>.</p>";
+  if(CONFIG.appointmentService){ a += "<div class='btns'><a class='btn' href='" + esc(CONFIG.appointmentService.url) + "' target='_blank' rel='noopener'>Solicitar cita: " + esc(CONFIG.appointmentService.name) + "</a></div>"; }
+  else a += "<p class='hint'>Esta aplicación no gestiona citas ni derivaciones.</p>";
+  document.getElementById("lesionAction").innerHTML = a;
+}
+
+/* =====================================================================
+   11. MÓDULO 5 · ENCUESTA
+   ===================================================================== */
+const SURVEY = {
+  measures: ["Fotoprotector","Gorra o sombrero","Gafas de sol","Ropa que cubría","Busqué sombra","Elegí horario con menos sol","Protector labial"],
+  barriers: ["Olvido","Falta de producto","Escozor ocular","Sensación grasa","Dificultad para reaplicar","Ropa incómoda","Otras"]
+};
+function renderSurvey(){
+  const f = document.getElementById("surveyForm");
+  const chipGroup = (name, arr, type) => "<div class='chips'>" + arr.map(x => "<label class='chip'><input type='" + type + "' name='" + name + "' value='" + esc(x) + "'><span>" + esc(x) + "</span></label>").join("") + "</div>";
+  const sportOpts = Object.values(CONTENT.sports).map(s => "<option>" + esc(s.label) + "</option>").join("");
+  f.innerHTML = "<label class='f' for='s-sport'>Deporte</label><select id='s-sport'>" + sportOpts + "</select>"
+    + "<label class='f' for='s-dur'>Duración</label><select id='s-dur'><option>Menos de 1 hora</option><option>1–2 horas</option><option>2–4 horas</option><option>Más de 4 horas</option></select>"
+    + "<p class='f'>¿Qué medidas usaste?</p>" + chipGroup("s-meas", SURVEY.measures, "checkbox")
+    + "<p class='f'>¿Reaplicaste el fotoprotector?</p>" + chipGroup("s-reap", ["Sí","No","No hizo falta","No usé fotoprotector"], "radio")
+    + "<p class='f'>¿Notaste quemadura o enrojecimiento después?</p>" + chipGroup("s-burn", ["No","Enrojecimiento leve","Quemadura con molestias","Aún no lo sé"], "radio")
+    + "<p class='f'>¿Qué te lo puso difícil?</p>" + chipGroup("s-bar", SURVEY.barriers, "checkbox")
+    + "<p class='f'>¿Te ha resultado útil la herramienta?</p>" + chipGroup("s-use", ["Nada","Poco","Bastante","Mucho"], "radio")
+    + "<p class='hint' style='margin-top:14px'>No incluyas tu nombre, fecha de nacimiento, fotos ni ubicación. " + reviewTag("survey") + "</p>"
+    + "<div class='note info'>Tus respuestas se guardan <strong>solo en este dispositivo</strong>. El envío a la Fundación está desactivado hasta que se configuren la información al participante, la base jurídica, la seguridad y, cuando corresponda, la revisión ética.</div>"
+    + "<div class='btns'><button class='btn full' type='submit'>Guardar mi respuesta</button></div>";
+  f.onsubmit = e => {
+    e.preventDefault();
+    const val = n => (f.querySelector("input[name='" + n + "']:checked") || {}).value || null;
+    const vals = n => [...f.querySelectorAll("input[name='" + n + "']:checked")].map(x => x.value);
+    const r = { fecha: new Date().toISOString().slice(0,10), deporte: f.querySelector("#s-sport").value, duracion: f.querySelector("#s-dur").value,
+      medidas: vals("s-meas"), reaplicacion: val("s-reap"), quemadura: val("s-burn"), barreras: vals("s-bar"), utilidad: val("s-use") };
+    const list = store.get("encuestas", []); list.push(r);
+    if(!store.set("encuestas", list)){ toast("Este navegador no permite guardar datos locales."); return; }
+    store.del("pendiente"); f.reset(); renderSurveyList(); toast("Respuesta guardada en este dispositivo. ¡Gracias!");
+  };
+  document.getElementById("remindTomorrow").onclick = () => {
+    const t = new Date(); t.setDate(t.getDate() + 1);
+    store.set("pendiente", t.toISOString().slice(0,10)) ? toast("Te lo recordaremos mañana al abrir la app en este dispositivo.") : toast("Este navegador no permite guardar el recordatorio.");
+  };
+  renderSurveyList();
+}
+function renderSurveyList(){
+  const list = store.get("encuestas", []); const el = document.getElementById("surveyList");
+  el.innerHTML = list.length ? "<p>Has guardado " + list.length + " respuesta" + (list.length > 1 ? "s" : "") + " en este dispositivo.</p>"
+    + "<div class='btns'><button class='btn ghost small' id='sExport'>Descargar mis respuestas (.json)</button><button class='btn ghost small' id='sDel'>Borrar mis respuestas</button></div>"
+    : "<p class='hint'>Aún no hay respuestas guardadas en este dispositivo.</p>";
+  const ex = document.getElementById("sExport"); if(ex) ex.onclick = () => offerFile("mis-respuestas-piel-y-deporte.json", JSON.stringify(list, null, 2), "application/json");
+  const de = document.getElementById("sDel"); if(de) de.onclick = () => { store.del("encuestas"); renderSurveyList(); toast("Respuestas borradas."); };
+}
+function renderPending(){
+  const p = store.get("pendiente", null); const el = document.getElementById("pendingSurvey");
+  const today = new Date().toISOString().slice(0,10);
+  el.innerHTML = p && p <= today ? "<div class='note info'><strong>¿Cómo fue tu última actividad?</strong> Ya puedes contarnos si apareció enrojecimiento. <a href='#despues'>Responder la encuesta</a></div>" : "";
+}
+
+/* =====================================================================
+   12. FUENTES, ESTADO Y DIAGNÓSTICO
+   ===================================================================== */
+function renderSources(){
+  document.getElementById("sourcesList").innerHTML = "<ul class='clean'>" + SOURCES.map(s => "<li class='check' style='display:block'><a href='" + s.url + "' target='_blank' rel='noopener'><strong>" + esc(s.name) + "</strong></a>"
+    + "<div class='meta'>" + esc(s.url.replace(/^https?:\/\//,"")) + "</div>" + (s.note ? "<div class='hint'>" + esc(s.note) + "</div>" : "") + "</li>").join("") + "</ul>";
+  document.getElementById("reviewList").innerHTML = "<ul class='clean'>" + Object.values(CONTENT.review).map((r,i) => "<li class='check' style='display:block'><strong>" + esc(r.label) + "</strong><br>"
+    + (r.reviewed ? "<span class='tag op'>Revisado el " + esc(r.reviewed) + "</span>" : "<span class='tag rev'>Pendiente de revisión clínica</span>") + " <span class='meta'>Borrador redactado el " + CONFIG.draftDate + "</span></li>").join("") + "</ul>";
+}
+const STATUS = [
+  ["Pantalla de inicio y navegación","op","Operativo."],
+  ["Formulario de actividad y plan de protección","op","Reglas de recomendación operativas, sin cálculo de tiempo seguro. Contenido pendiente de revisión clínica."],
+  ["Datos UV reales","cfg","Integración con Open-Meteo implementada, pero la vista previa de Claude bloquea conexiones externas: se muestra “Datos UV no disponibles”. Antes de publicar: validar la fuente (o sustituirla por una de AEMET si se dispone de acceso), y confirmar cobertura y hora de emisión."],
+  ["Datos UV simulados","demo","Botón “Ver ejemplo con datos simulados”, siempre etiquetado como simulación."],
+  ["Geolocalización","cfg","Opcional y sin almacenamiento. La vista previa la bloquea; funcionará al publicar en un dominio propio con HTTPS."],
+  ["Guardar plan como imagen o ficha","op","Disponible si la vista permite descargas (se pide confirmación). Alternativa: copiar el plan."],
+  ["Recordatorios de calendario (.ics)","cfg","Generación operativa. La vista previa de Claude no permite archivos .ics; funcionará al publicar. Alternativa: copiar horarios."],
+  ["Formación de entrenadores, listas y mensajes","op","Operativo. Contenido pendiente de revisión clínica."],
+  ["Cuestionario y registro local de formación","op","Registro solo en el dispositivo; no es una acreditación."],
+  ["Lista de organizadores y ficha de pendientes","op","Operativo. “Medidas completadas” no es una certificación."],
+  ["Carteles con QR","cfg","Pendiente de configurar la URL pública definitiva (CONFIG.publicUrl)."],
+  ["Guía de lesiones","op","Educativa, sin diagnóstico, sin fotos. Pendiente de revisión clínica."],
+  ["Solicitud de cita o derivación","cfg","No existe servicio configurado: no se ofrece. Se explica cómo consultar por los recursos habituales."],
+  ["Encuesta posterior","op","Guardado solo en el dispositivo."],
+  ["Recogida centralizada de encuestas","cfg","Desactivada hasta configurar información al participante, base jurídica, seguridad y revisión ética."],
+  ["Acceso sin conexión","op","En la versión publicada, la app queda guardada tras la primera visita y los contenidos educativos se abren sin conexión. Los datos UV requieren conexión. No disponible dentro del visor de Claude."],
+  ["Enlaces a la Fundación Piel Sana y UV-Derma","rev","Pendientes de confirmar por la Fundación."],
+  ["Contenidos clínicos","rev","Todos pendientes de revisión clínica."],
+  ["Logotipos oficiales","cfg","No incluidos. Se añadirán si la Fundación los proporciona."]
+];
+function renderStatus(){
+  const lab = { op: "Operativo", demo: "Demostración", cfg: "Requiere configuración", rev: "Requiere validación" };
+  document.getElementById("statusTable").innerHTML = "<thead><tr><th>Función</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>"
+    + STATUS.map(r => "<tr><td><strong>" + esc(r[0]) + "</strong></td><td><span class='tag " + r[1] + "'>" + lab[r[1]] + "</span></td><td>" + esc(r[2]) + "</td></tr>").join("") + "</tbody>";
+}
+function renderDiag(){
+  const el = document.getElementById("envDiag"); if(!el) return;
+  const items = [
+    ["Almacenamiento local", store.ok() ? "disponible" : "no disponible en esta vista"],
+    ["Descargas", DL ? "disponibles con confirmación" : "dependen del navegador"],
+    ["Geolocalización", "geolocation" in navigator ? "el navegador la ofrece (puede estar bloqueada en esta vista)" : "no disponible"],
+    ["Proveedor UV configurado", CONFIG.uvProvider === "none" ? "ninguno" : UVProviders[CONFIG.uvProvider].name],
+    ["URL pública para QR", CONFIG.publicUrl || "sin configurar"],
+    ["Servicio de citas", CONFIG.appointmentService ? CONFIG.appointmentService.name : "sin configurar"],
+    ["Recogida centralizada", CONFIG.centralSurveyCollection ? "activada" : "desactivada"]
+  ];
+  el.innerHTML = items.map(i => "<li class='check' style='display:block'><strong>" + esc(i[0]) + ":</strong> " + esc(i[1]) + "</li>").join("");
+}
+
+/* =====================================================================
+   13. ARRANQUE
+   ===================================================================== */
+renderTraining();
+renderChecklist("coachCheck", "coachcheck", CONTENT.coachChecklist);
+document.getElementById("coachReset").addEventListener("click", () => { store.del("coachcheck"); renderChecklist("coachCheck", "coachcheck", CONTENT.coachChecklist); });
+(function(){ const el = document.getElementById("coachMsgs"); el.innerHTML = msgBlock(CONTENT.coachMsgs); wireCopy(el, CONTENT.coachMsgs); })();
+renderQuiz();
+renderOrg();
+document.getElementById("orgDownload").addEventListener("click", () => offerFile("acciones-pendientes.txt", orgPendingText(), "text/plain;charset=utf-8"));
+document.getElementById("orgCopy").addEventListener("click", () => copyText(orgPendingText()));
+document.getElementById("orgReset").addEventListener("click", () => { store.del("org"); renderOrg(); });
+(function(){ const el = document.getElementById("orgMsgs"); el.innerHTML = msgBlock(CONTENT.orgMsgs); wireCopy(el, CONTENT.orgMsgs);
+  document.getElementById("orgLesion").innerHTML = "<ol>" + CONTENT.orgLesionSteps.map(s => "<li style='margin:6px 0'>" + esc(s) + "</li>").join("") + "</ol>"; })();
+renderPoster();
+renderLesion();
+renderSurvey();
+renderSources();
+renderStatus();
+route();
+/* Modo sin conexión: solo en la versión publicada en dominio propio */
+try{ if("serviceWorker" in navigator && location.protocol === "https:" && !/claude/.test(location.hostname)) navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
+</script>
+</body>
+</html>
