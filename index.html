@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Piel y Deporte</title>
+<title>Save Your Skin · Disfruta del deporte. Protege tu piel.</title>
 <meta name="description" content="Fotoprotección y signos de alarma en la piel para deportistas, entrenadores y organizadores.">
 <style>
 :root{
@@ -136,9 +136,9 @@ footer a{margin-right:12px}
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#inicio" aria-label="Piel y Deporte, inicio">
+    <a class="brand" href="#inicio" aria-label="Save Your Skin, inicio">
       <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="7" fill="#f2a516"/><g stroke="#f2a516" stroke-width="2.4" stroke-linecap="round"><path d="M17 2v4M17 28v4M2 17h4M28 17h4M6.4 6.4l2.8 2.8M24.8 24.8l2.8 2.8M6.4 27.6l2.8-2.8M24.8 9.2l2.8-2.8"/></g></svg>
-      Piel y Deporte
+      Save Your Skin
     </a>
     <a class="btn ghost small back" id="backBtn" href="#inicio">← Inicio</a>
   </div>
@@ -148,7 +148,7 @@ footer a{margin-right:12px}
 
 <!-- ========== INICIO ========== -->
 <section class="view" id="v-inicio" aria-labelledby="t-inicio">
-  <p class="lead">Una herramienta de la propuesta del área de Dermatología y Deporte para disfrutar del deporte protegiendo la piel.</p>
+  <p class="lead"><strong style="color:var(--brand)">Disfruta del deporte. Protege tu piel.</strong><br>Una herramienta de la propuesta del área de Dermatología y Deporte para disfrutar del deporte protegiendo la piel.</p>
   <h1 id="t-inicio">¿Qué necesitas hoy?</h1>
   <div id="pendingSurvey"></div>
   <div class="grid">
@@ -321,7 +321,7 @@ footer a{margin-right:12px}
 
 <footer>
   <div class="wrap">
-    <p>Piel y Deporte · Propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV.</p>
+    <p>Save Your Skin · Disfruta del deporte. Protege tu piel. · Propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV.</p>
     <p><a href="#fuentes">Fuentes y revisión</a><a href="#saber">Qué debo saber de esta aplicación</a><a href="#inicio">Inicio</a></p>
   </div>
 </footer>
@@ -465,7 +465,7 @@ const CONTENT = {
     { t: "Megafonía · salida", m: "Buenos días a todos los participantes. Hoy el sol también corre con nosotros: si aún no lo has hecho, aplícate fotoprotector en orejas, nuca, hombros y labios. Encontrarás fotoprotector en la zona de salida. ¡Buena carrera!" },
     { t: "Megafonía · durante la prueba o en meta", m: "Recordamos al público y a los voluntarios: buscad la sombra cuando podáis, usad gorra y reaplicad fotoprotector. Hay producto disponible en el punto de información." },
     { t: "Correo previo a participantes", m: "Asunto: Prepárate también para el sol\n\nHola:\n\nEl día de la prueba estaremos varias horas al aire libre. Te recomendamos:\n• Gorra con visera y gafas de sol con filtro UV.\n• Ropa técnica que cubra hombros.\n• Fotoprotector FPS 50+, con protección UVA y resistente al agua, aplicado antes de salir según las instrucciones del producto.\n• Reaplicar en los avituallamientos, al menos cada dos horas, y tras sudar mucho o secarte con toalla.\n\nHabrá fotoprotector y zonas de sombra en salida y meta.\n\n¡Nos vemos en la línea de salida!" },
-    { t: "Redes sociales", m: "☀️ Este domingo, además de las zapatillas, trae tu protección solar: gorra, gafas y fotoprotector FPS 50+ resistente al agua. Orejas, nuca y labios también cuentan. Disfruta del deporte cuidando tu piel. #PielYDeporte" }
+    { t: "Redes sociales", m: "☀️ Este domingo, además de las zapatillas, trae tu protección solar: gorra, gafas y fotoprotector FPS 50+ resistente al agua. Orejas, nuca y labios también cuentan. Disfruta del deporte cuidando tu piel. #SaveYourSkin" }
   ],
   orgLesionSteps: [
     "Escucha con calma y sin restar importancia a la preocupación.",
@@ -836,7 +836,7 @@ function uvLine(){
 }
 function planText(){
   const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
-  let t = "PLAN DE PROTECCIÓN · Piel y Deporte\n" + sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")\n" + uvLine() + "\n";
+  let t = "PLAN DE PROTECCIÓN · Save Your Skin\n" + sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")\n" + uvLine() + "\n";
   plan.sections.forEach(s => { t += "\n" + s.t.toUpperCase() + "\n" + s.items.map(x => (s.check ? "☐ " : "• ") + x).join("\n") + "\n"; });
   t += "\nNo sustituye la valoración médica.";
   return t;
@@ -861,11 +861,11 @@ function planICS(){
   const d = inp.date.replace(/-/g,"");
   const stamp = new Date().toISOString().replace(/[-:]/g,"").slice(0,15) + "Z";
   const ev = (min, title) => { const h = fmt(min).replace(":",""); return ["BEGIN:VEVENT","UID:" + d + h + Math.random().toString(36).slice(2,8) + "@pielydeporte","DTSTAMP:" + stamp,
-    "DTSTART:" + d + "T" + h + "00","DURATION:PT10M","SUMMARY:" + title,"DESCRIPTION:Piel y Deporte. Hazlo en una pausa; no uses el móvil durante la práctica.",
+    "DTSTART:" + d + "T" + h + "00","DURATION:PT10M","SUMMARY:" + title,"DESCRIPTION:Save Your Skin. Hazlo en una pausa; no uses el móvil durante la práctica.",
     "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:" + title,"TRIGGER:-PT0M","END:VALARM","END:VEVENT"].join("\r\n"); };
   const evs = [ev(plan.start - 15, "Aplicar fotoprotector antes de la actividad")];
   plan.reminderTimes.forEach(t => evs.push(ev(t - 10, "Reaplicar fotoprotector en la próxima pausa")));
-  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Piel y Deporte//ES","CALSCALE:GREGORIAN", ...evs, "END:VCALENDAR"].join("\r\n");
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Save Your Skin//ES","CALSCALE:GREGORIAN", ...evs, "END:VCALENDAR"].join("\r\n");
 }
 async function planPNG(){
   const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
@@ -966,7 +966,7 @@ function updateOrgCount(){
 }
 function orgPendingText(){
   const st = store.get("org", {});
-  let t = "ACCIONES PENDIENTES · Piel y Deporte\nGenerado el " + new Date().toLocaleString("es-ES") + "\n";
+  let t = "ACCIONES PENDIENTES · Save Your Skin\nGenerado el " + new Date().toLocaleString("es-ES") + "\n";
   CONTENT.orgPhases.forEach((p,pi) => { const pend = p.items.filter((_,i) => !st[pi + "_" + i]); if(pend.length) t += "\n" + p.t.toUpperCase() + "\n" + pend.map(x => "☐ " + x).join("\n") + "\n"; });
   t += "\n“Medidas completadas” refleja lo marcado por el equipo organizador; no es una certificación.";
   return t;
@@ -978,7 +978,7 @@ const POSTER = {
     agua:    { name: "Agua y nieve", bg: ["#0a4a8c","#1aa6d0"], acc: "#ffd23f", ink: "#ffffff", sun: "#ffc23a" },
     sol:     { name: "Sol", bg: ["#ff6a13","#ffb21a"], acc: "#0b2e3a", ink: "#ffffff", sun: "#fff3c4" }
   },
-  slogans: ["El sol también compite. Protégete.", "Tu mejor marca, con la piel protegida", "Corre con protección", "A meta sin quemaduras", "Protege tu piel, disfruta del deporte"],
+  slogans: ["El sol también compite. Protégete.", "Tu mejor marca, con la piel protegida", "Corre con protección", "A meta sin quemaduras", "Disfruta del deporte. Protege tu piel."],
   formats: { a4: { name: "Cartel A4", w: 1240, h: 1754 }, post: { name: "Post cuadrado", w: 1080, h: 1080 }, story: { name: "Story vertical", w: 1080, h: 1920 } },
   tips: [["🧢","Gorra y gafas de sol"],["🧴","FPS 50+ resistente al agua"],["🔁","Reaplica en los avituallamientos"],["👂","Orejas, nuca y labios también"]]
 };
@@ -989,7 +989,7 @@ function renderPoster(){
     + "<label class='f' for='pv-event'>Nombre del evento <span class='hint'>(opcional)</span></label><input type='text' id='pv-event' maxlength='40' placeholder='Ej.: Media Maratón de Granada'>"
     + "<label class='f' for='pv-sub'>Fecha y lugar <span class='hint'>(opcional)</span></label><input type='text' id='pv-sub' maxlength='50' placeholder='Ej.: Domingo 12 de abril · Salida 9:00'>"
     + "<label class='f' for='pv-slogan'>Lema</label><select id='pv-slogan'>" + POSTER.slogans.map((x,i) => "<option value='" + i + "'>" + esc(x) + "</option>").join("") + "</select>"
-    + "<div class='row'><div><label class='f' for='pv-theme'>Estilo</label><select id='pv-theme'>" + opt(POSTER.themes, "energia") + "</select></div>"
+    + "<div class='row'><div><label class='f' for='pv-theme'>Estilo</label><select id='pv-theme'>" + opt(POSTER.themes, "asfalto") + "</select></div>"
     + "<div><label class='f' for='pv-format'>Formato</label><select id='pv-format'>" + opt(POSTER.formats, "a4") + "</select></div></div>"
     + "<canvas id='pv-canvas' class='poster-prev' role='img' aria-label='Vista previa del cartel'></canvas>"
     + "<div class='btns'><button class='btn' id='posterBtn'>Descargar cartel (PNG)</button></div>"
@@ -999,7 +999,7 @@ function renderPoster(){
   document.getElementById("posterBtn").addEventListener("click", async () => {
     await redraw(); const c = document.getElementById("pv-canvas");
     const f = document.getElementById("pv-format").value;
-    c.toBlob(b => offerFile("cartel-piel-y-deporte-" + f + ".png", b, "image/png"), "image/png");
+    c.toBlob(b => offerFile("cartel-save-your-skin-" + f + ".png", b, "image/png"), "image/png");
   });
   redraw();
 }
@@ -1026,7 +1026,7 @@ async function drawPoster(){
   x.restore();
   const P = 70*u; let y = P;
   // marca
-  x.fillStyle = th.ink; x.font = F(34, 700); x.fillText("☀ PIEL Y DEPORTE", P, y + 30*u); y += 70*u;
+  x.fillStyle = th.ink; x.font = F(34, 700); x.fillText("☀ SAVE YOUR SKIN", P, y + 30*u); y += 70*u;
   // evento
   if(ev){ x.font = F(40, 800); const tw = Math.min(x.measureText(ev.toUpperCase()).width, W - 2*P - 40*u);
     x.fillStyle = th.acc; roundRect(x, P, y, tw + 40*u, 64*u, 32*u); x.fill();
@@ -1063,7 +1063,7 @@ async function drawPoster(){
   // línea de meta a cuadros
   const cs = 28*u, rows = 2, by = H - rows*cs;
   for(let r = 0; r < rows; r++) for(let k = 0; k*cs < W; k++){ x.fillStyle = (r + k) % 2 ? "#111" : "#fff"; x.fillRect(k*cs, by + r*cs, cs, cs); }
-  x.fillStyle = th.ink; x.font = F(24, 600); x.fillText("Sin registro ni instalación · No sustituye la valoración médica", P, by - 24*u, (tall ? W - 2*P : qx - P - 60*u));
+  x.fillStyle = th.ink; x.font = F(24, 600); x.fillText("Disfruta del deporte. Protege tu piel. · No sustituye la valoración médica", P, by - 24*u, (tall ? W - 2*P : qx - P - 60*u));
 }
 function roundRect(x, X, Y, w, h, r){ x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
 function loadScript(src){ return new Promise((res, rej) => { if(window.qrcode) return res(); const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
@@ -1133,12 +1133,12 @@ function renderSurveyList(){
     + "<div class='btns'><button class='btn ghost small' id='sExport'>Descargar mis respuestas (.json)</button><button class='btn ghost small' id='sDel'>Borrar mis respuestas</button></div>"
     : "<p class='hint'>Aún no hay respuestas guardadas en este dispositivo.</p>";
   renderSurveySend(list);
-  const ex = document.getElementById("sExport"); if(ex) ex.onclick = () => offerFile("mis-respuestas-piel-y-deporte.json", JSON.stringify(list, null, 2), "application/json");
+  const ex = document.getElementById("sExport"); if(ex) ex.onclick = () => offerFile("mis-respuestas-save-your-skin.json", JSON.stringify(list, null, 2), "application/json");
   const de = document.getElementById("sDel"); if(de) de.onclick = () => { store.del("encuestas"); renderSurveyList(); toast("Respuestas borradas."); };
 }
 function surveyBody(r){
   const j = a => a && a.length ? a.join(", ") : "—";
-  return "Respuesta voluntaria · Piel y Deporte\n\n"
+  return "Respuesta voluntaria · Save Your Skin\n\n"
     + "Fecha: " + r.fecha + "\nDeporte: " + r.deporte + "\nDuración: " + r.duracion
     + "\nMedidas utilizadas: " + j(r.medidas) + "\nReaplicación: " + (r.reaplicacion || "—")
     + "\nQuemadura o enrojecimiento: " + (r.quemadura || "—") + "\nBarreras: " + j(r.barreras)
@@ -1163,7 +1163,7 @@ function renderSurveySend(list){
   const c = document.getElementById("sConsent"), b = document.getElementById("sSend");
   c.onchange = () => { b.disabled = !c.checked; };
   b.onclick = () => { if(!c.checked) return;
-    location.href = "mailto:" + CONFIG.surveyEmail + "?subject=" + encodeURIComponent("Encuesta Piel y Deporte · " + r.fecha) + "&body=" + encodeURIComponent(surveyBody(r)); };
+    location.href = "mailto:" + CONFIG.surveyEmail + "?subject=" + encodeURIComponent("Encuesta Save Your Skin · " + r.fecha) + "&body=" + encodeURIComponent(surveyBody(r)); };
   document.getElementById("sCopy").onclick = () => copyText(surveyBody(r));
 }
 function renderPending(){

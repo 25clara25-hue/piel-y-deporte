@@ -1,4 +1,4 @@
-# Piel y Deporte
+# Save Your Skin: Disfruta del deporte. Protege tu piel.
 
 Aplicación web propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV.
 Publicada en: https://25clara25-hue.github.io/piel-y-deporte/
