@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Piel y Deporte</title>
-<meta name="description" content="Fotoprotección y signos de alarma en la piel para deportistas, entrenadores y organizadores. Prototipo.">
+<meta name="description" content="Fotoprotección y signos de alarma en la piel para deportistas, entrenadores y organizadores.">
 <style>
 :root{
   --bg:#fbfaf6; --surface:#ffffff; --ink:#1b2a33; --muted:#51616b; --line:#e3e0d6;
@@ -107,6 +107,13 @@ table.status th,table.status td{text-align:left;padding:10px 6px;border-bottom:1
 .quiz-q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .quiz-q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
 .quiz-q .exp{display:none;margin-top:8px}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+.figs.one{grid-template-columns:1fr}
+figure.ph{margin:0;background:#f3f1ea;border-radius:12px;overflow:hidden}
+figure.ph img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#e9e5d8}
+figure.ph figcaption{font-size:.82rem;padding:8px 10px;color:var(--muted)}
+.credit{font-size:.75rem;color:var(--muted)}
+.poster-prev{width:100%;max-width:420px;display:block;margin:12px auto;border-radius:12px;box-shadow:var(--shadow);background:#ddd}
 footer{border-top:1px solid var(--line);padding:20px 0;font-size:.9rem;color:var(--muted)}
 footer a{margin-right:12px}
 .view{display:none}
@@ -122,8 +129,8 @@ footer a{margin-right:12px}
 
 <div class="proto" role="note">
   <div class="wrap">
-    <span><strong>Prototipo pendiente de revisión y validación por la Fundación.</strong> No sustituye la valoración médica.</span>
-    <a href="#estado">Qué funciona y qué no</a>
+    <span>No sustituye la valoración médica.</span>
+    <a href="#saber">Qué debo saber de esta aplicación</a>
   </div>
 </div>
 
@@ -262,7 +269,7 @@ footer a{margin-right:12px}
     <div id="orgLesion"></div>
   </div>
   <div class="card">
-    <h2>Carteles con código QR</h2>
+    <h2>Cartel para tu competición</h2>
     <div id="posterBox"></div>
   </div>
 </section>
@@ -304,24 +311,18 @@ footer a{margin-right:12px}
   </div>
 </section>
 
-<!-- ========== ESTADO ========== -->
-<section class="view" id="v-estado" aria-labelledby="t-est">
-  <h1 id="t-est">Estado del prototipo</h1>
-  <p>Qué está operativo, qué es de demostración y qué requiere configuración o validación antes de publicarse.</p>
-  <p><span class="tag op">Operativo</span> <span class="tag demo">Demostración</span> <span class="tag cfg">Requiere configuración</span> <span class="tag rev">Requiere validación</span></p>
-  <div class="card" style="overflow-x:auto"><table class="status" id="statusTable"></table></div>
-  <div class="card">
-    <h2>Diagnóstico de esta vista</h2>
-    <ul class="clean" id="envDiag"></ul>
-  </div>
+<!-- ========== QUÉ DEBO SABER ========== -->
+<section class="view" id="v-saber" aria-labelledby="t-sab">
+  <h1 id="t-sab">Qué debo saber de esta aplicación</h1>
+  <div id="saberContent"></div>
 </section>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Piel y Deporte · Propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV. Prototipo pendiente de revisión y validación por la Fundación.</p>
-    <p><a href="#fuentes">Fuentes y revisión</a><a href="#estado">Estado del prototipo</a><a href="#inicio">Inicio</a></p>
+    <p>Piel y Deporte · Propuesta para el área de Dermatología y Deporte de la Fundación Piel Sana de la AEDV.</p>
+    <p><a href="#fuentes">Fuentes y revisión</a><a href="#saber">Qué debo saber de esta aplicación</a><a href="#inicio">Inicio</a></p>
   </div>
 </footer>
 
@@ -341,7 +342,7 @@ const CONFIG = {
   // base jurídica, seguridad y, cuando corresponda, revisión ética.
   centralSurveyCollection: false,
   // Envío voluntario de la encuesta desde la app de correo del propio participante (mailto). "" = desactivado.
-  surveyEmail: "",
+  surveyEmail: "urena.paniego@gmail.com",
   // Proveedor UV activo: "open-meteo" (predicción por modelo, pendiente de validación) o "none".
   uvProvider: "open-meteo",
   draftDate: "18/11/2026" // fecha de redacción del borrador (no es fecha de revisión clínica)
@@ -446,7 +447,7 @@ const CONTENT = {
       "Publicar el mensaje en redes sociales.",
       "Si hay menores, informar a las familias de lo que deben traer." ]},
     { t: "Recogida de dorsal o recepción", items: [
-      "Colocar el cartel con QR de la aplicación (cuando esté configurada la URL pública).",
+      "Colocar el cartel con QR de la aplicación en la zona de recogida.",
       "Ofrecer fotoprotector y recordar las zonas olvidadas.",
       "Informar de dónde estarán la sombra y los puntos de fotoprotector." ]},
     { t: "Desarrollo de la actividad", items: [
@@ -473,6 +474,11 @@ const CONTENT = {
     "Indica la sección “Me preocupa una lesión en la piel” de esta aplicación y la información de Euromelanoma.",
     "No registres nombre, datos de contacto ni datos de salud de la persona."
   ],
+  lesionPhotos: {
+    "Regla ABCDE": [ { id: 18390, c: "Melanoma: asimetría, borde irregular y varios tonos de color." }, { id: 18380, c: "Melanoma: color rojo-marrón no uniforme y bordes irregulares." } ],
+    "Crece rápido, sangra o no cicatriza": [ { id: 18383, c: "Carcinoma basocelular ulcerado detrás de la oreja: una herida que no termina de cicatrizar. Las orejas son una zona que suele olvidarse." } ],
+    "No todas las lesiones sospechosas son oscuras": [ { id: 18384, c: "Carcinoma basocelular nodular: bultito rosado o del color de la piel." }, { id: 18385, c: "Carcinoma basocelular superficial: mancha roja que puede confundirse con un eccema." } ]
+  },
   lesion: [
     { t: "Regla ABCDE", html: "<ul class='ticks'><li><strong>A · Asimetría:</strong> las dos mitades no se parecen.</li><li><strong>B · Bordes</strong> irregulares, mal definidos o dentados.</li><li><strong>C · Color</strong> no uniforme: varios tonos de marrón, negro, rojo, blanco o azulado.</li><li><strong>D · Diámetro</strong> grande o que va aumentando.</li><li><strong>E · Evolución:</strong> cambia de tamaño, forma, color, relieve, o aparecen síntomas como picor o sangrado.</li></ul>" },
     { t: "El “patito feo”", html: "<p>La mayoría de los lunares de una persona se parecen entre sí. Fíjate en el que es <strong>diferente a los demás</strong>: más oscuro, más claro, de otra forma o que destaca.</p>" },
@@ -483,13 +489,14 @@ const CONTENT = {
 };
 
 const SOURCES = [
-  { name: "Fundación Piel Sana de la AEDV", url: "https://aedv.es/", note: "Enlace a la web de la AEDV. Pendiente de confirmar por la Fundación la dirección definitiva de la Fundación Piel Sana." },
-  { name: "UV-Derma (app de la Fundación Piel Sana)", url: "https://play.google.com/store/apps/details?id=com.uvderma.uvderma", note: "Enlace pendiente de verificar vigencia por la Fundación." },
+  { name: "Fundación Piel Sana de la AEDV", url: "https://aedv.es/", },
+  { name: "UV-Derma (app de la Fundación Piel Sana)", url: "https://play.google.com/store/apps/details?id=com.uvderma.uvderma"},
   { name: "AEMPS · Fotoprotección y deporte: “En deportes al aire libre protege tu piel”", url: "https://www.aemps.gob.es/la-aemps/campana-sobre-fotoproteccion-y-deporte-en-deportes-al-aire-libre-protege-tu-piel/" },
   { name: "OMS · SunSmart Global UV App", url: "https://www.who.int/tools/sunsmart-global-uv-app" },
   { name: "AEMET · Predicción de radiación ultravioleta (índice UV)", url: "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv" },
   { name: "AEMET · Interpretación del índice UV", url: "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv/ayuda" },
-  { name: "Euromelanoma (Fundación Piel Sana de la AEDV)", url: "https://euromelanoma.aedv.es/" }
+  { name: "Euromelanoma (Fundación Piel Sana de la AEDV)", url: "https://euromelanoma.aedv.es/" },
+  { name: "Fotografías de lesiones: National Cancer Institute (NCI), dominio público, vía CDC Public Health Image Library", url: "https://www.cancer.gov/", note: "Imágenes NCI · www.cancer.gov (PHIL 18390, 18380, 18383, 18384, 18385)." }
 ];
 const AEMET_UV = "https://www.aemet.es/es/eltiempo/prediccion/radiacionuv";
 const EUROMELANOMA = "https://euromelanoma.aedv.es/";
@@ -650,7 +657,7 @@ const store = {
   ok(){ try{ localStorage.setItem("pyd__t","1"); localStorage.removeItem("pyd__t"); return true; }catch(e){ return false; } }
 };
 let DL = null; // capacidad de descargas del entorno de Claude (si existe)
-try{ if(window.claude && window.claude.use){ window.claude.use("downloads").then(d => { DL = d; renderDiag(); }).catch(()=>{}); } }catch(e){}
+try{ if(window.claude && window.claude.use){ window.claude.use("downloads").then(d => { DL = d; }).catch(()=>{}); } }catch(e){}
 
 function toast(t){ const el = document.getElementById("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast._t); toast._t = setTimeout(()=>el.style.display="none", 3800); }
 async function offerFile(filename, data, mime){
@@ -701,14 +708,13 @@ document.querySelectorAll(".ico").forEach(el => { const k = el.textContent.trim(
 /* =====================================================================
    6. NAVEGACIÓN
    ===================================================================== */
-const VIEWS = ["inicio","actividad","entrenador","organizador","lesion","despues","fuentes","estado"];
+const VIEWS = ["inicio","actividad","entrenador","organizador","lesion","despues","fuentes","saber"];
 function route(){
   let h = (location.hash || "#inicio").slice(1);
   if(!VIEWS.includes(h)) h = "inicio";
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "v-" + h));
   document.getElementById("backBtn").style.display = h === "inicio" ? "none" : "inline-flex";
   if(h === "inicio") renderPending();
-  if(h === "estado") renderDiag();
   window.scrollTo(0,0);
   const m = document.getElementById("main"); try{ m.focus({ preventScroll: true }); }catch(e){}
 }
@@ -726,7 +732,7 @@ let geoCoords = null; // solo en memoria, nunca se guarda
   const geoAllowed = (() => { try{ const pp = document.permissionsPolicy || document.featurePolicy; return pp && pp.allowsFeature ? pp.allowsFeature("geolocation") : true; }catch(e){ return true; } })();
   if(!geoAllowed){
     const gb = document.getElementById("geoBtn"); gb.disabled = true;
-    document.getElementById("geoMsg").innerHTML = "<strong>Ubicación no disponible en esta vista previa.</strong> El visor de Claude bloquea el acceso a la ubicación; funcionará cuando la app se publique en su propia dirección web. Escribe la localidad.";
+    document.getElementById("geoMsg").textContent = "La ubicación no está disponible en este navegador. Escribe la localidad.";
   }
   document.getElementById("geoBtn").addEventListener("click", () => {
     const msg = document.getElementById("geoMsg");
@@ -832,14 +838,14 @@ function planText(){
   const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
   let t = "PLAN DE PROTECCIÓN · Piel y Deporte\n" + sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")\n" + uvLine() + "\n";
   plan.sections.forEach(s => { t += "\n" + s.t.toUpperCase() + "\n" + s.items.map(x => (s.check ? "☐ " : "• ") + x).join("\n") + "\n"; });
-  t += "\nPrototipo pendiente de revisión y validación por la Fundación. No sustituye la valoración médica.";
+  t += "\nNo sustituye la valoración médica.";
   return t;
 }
 function planHTML(){
   const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
   return "<!DOCTYPE html><html lang='es'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Plan de protección</title>"
     + "<style>body{font:16px/1.5 system-ui,sans-serif;max-width:680px;margin:24px auto;padding:0 16px;color:#1b2a33}h1{color:#0b6e6e}h2{font-size:1.1rem;margin-top:1.2em}.m{color:#51616b;font-size:.9rem}.n{background:#fff4dc;padding:10px;border-radius:8px}</style></head><body>"
-    + "<p class='n'>Prototipo pendiente de revisión y validación por la Fundación.</p><h1>Plan de protección para tu actividad</h1>"
+    + "<h1>Plan de protección para tu actividad</h1>"
     + "<p class='m'>" + esc(sp.label) + " · " + esc(inp.date) + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")</p><p class='m'>" + esc(uvLine()) + "</p>"
     + plan.sections.map(s => "<h2>" + esc(s.t) + "</h2><ul>" + s.items.map(x => "<li>" + (s.check ? "☐ " : "") + esc(x) + "</li>").join("") + "</ul>").join("")
     + "<p class='m'>Este plan no calcula tiempo seguro al sol. No sustituye la valoración médica.</p></body></html>";
@@ -855,11 +861,11 @@ function planICS(){
   const d = inp.date.replace(/-/g,"");
   const stamp = new Date().toISOString().replace(/[-:]/g,"").slice(0,15) + "Z";
   const ev = (min, title) => { const h = fmt(min).replace(":",""); return ["BEGIN:VEVENT","UID:" + d + h + Math.random().toString(36).slice(2,8) + "@pielydeporte","DTSTAMP:" + stamp,
-    "DTSTART:" + d + "T" + h + "00","DURATION:PT10M","SUMMARY:" + title,"DESCRIPTION:Piel y Deporte (prototipo). Hazlo en una pausa; no uses el móvil durante la práctica.",
+    "DTSTART:" + d + "T" + h + "00","DURATION:PT10M","SUMMARY:" + title,"DESCRIPTION:Piel y Deporte. Hazlo en una pausa; no uses el móvil durante la práctica.",
     "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:" + title,"TRIGGER:-PT0M","END:VALARM","END:VEVENT"].join("\r\n"); };
   const evs = [ev(plan.start - 15, "Aplicar fotoprotector antes de la actividad")];
   plan.reminderTimes.forEach(t => evs.push(ev(t - 10, "Reaplicar fotoprotector en la próxima pausa")));
-  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Piel y Deporte//Prototipo//ES","CALSCALE:GREGORIAN", ...evs, "END:VCALENDAR"].join("\r\n");
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Piel y Deporte//ES","CALSCALE:GREGORIAN", ...evs, "END:VCALENDAR"].join("\r\n");
 }
 async function planPNG(){
   const { inp, plan } = lastPlan; const sp = CONTENT.sports[inp.sport];
@@ -867,7 +873,6 @@ async function planPNG(){
   const font = (s, b) => (b ? "700 " : "400 ") + s + "px 'Atkinson Hyperlegible', system-ui, sans-serif";
   const lines = [];
   const push = (t, s, b, col, gap) => lines.push({ t, s, b, col: col || "#1b2a33", gap: gap || 0 });
-  push("Prototipo pendiente de revisión y validación por la Fundación", 24, true, "#7a5200");
   push("Plan de protección para tu actividad", 48, true, "#0b6e6e", 20);
   push(sp.label + " · " + inp.date + " · " + fmt(plan.start) + " (" + durTxt(inp.dur) + ")", 28, false, "#51616b", 8);
   push(uvLine(), 24, false, lastPlan.uvRes.ok && lastPlan.uvRes.data.simulated ? "#6b3fa0" : "#51616b", 8);
@@ -963,41 +968,116 @@ function orgPendingText(){
   const st = store.get("org", {});
   let t = "ACCIONES PENDIENTES · Piel y Deporte\nGenerado el " + new Date().toLocaleString("es-ES") + "\n";
   CONTENT.orgPhases.forEach((p,pi) => { const pend = p.items.filter((_,i) => !st[pi + "_" + i]); if(pend.length) t += "\n" + p.t.toUpperCase() + "\n" + pend.map(x => "☐ " + x).join("\n") + "\n"; });
-  t += "\n“Medidas completadas” refleja lo marcado por el equipo organizador; no es una certificación.\nPrototipo pendiente de revisión y validación por la Fundación.";
+  t += "\n“Medidas completadas” refleja lo marcado por el equipo organizador; no es una certificación.";
   return t;
 }
+const POSTER = {
+  themes: {
+    energia: { name: "Energía", bg: ["#0b6e6e","#12a08c"], acc: "#ffd23f", ink: "#ffffff", sun: "#ffb21a" },
+    asfalto: { name: "Asfalto", bg: ["#11151c","#2a3340"], acc: "#d7ff3a", ink: "#ffffff", sun: "#ff8a1f" },
+    agua:    { name: "Agua y nieve", bg: ["#0a4a8c","#1aa6d0"], acc: "#ffd23f", ink: "#ffffff", sun: "#ffc23a" },
+    sol:     { name: "Sol", bg: ["#ff6a13","#ffb21a"], acc: "#0b2e3a", ink: "#ffffff", sun: "#fff3c4" }
+  },
+  slogans: ["El sol también compite. Protégete.", "Tu mejor marca, con la piel protegida", "Corre con protección", "A meta sin quemaduras", "Protege tu piel, disfruta del deporte"],
+  formats: { a4: { name: "Cartel A4", w: 1240, h: 1754 }, post: { name: "Post cuadrado", w: 1080, h: 1080 }, story: { name: "Story vertical", w: 1080, h: 1920 } },
+  tips: [["🧢","Gorra y gafas de sol"],["🧴","FPS 50+ resistente al agua"],["🔁","Reaplica en los avituallamientos"],["👂","Orejas, nuca y labios también"]]
+};
 function renderPoster(){
   const box = document.getElementById("posterBox");
-  if(!CONFIG.publicUrl){
-    box.innerHTML = "<div class='note warn'><strong>Pendiente de configuración.</strong> Los carteles con QR se activarán cuando la aplicación tenga su dirección pública definitiva. No se genera ningún QR con direcciones provisionales o ficticias.</div>"
-      + "<p class='hint'>El QR solo contendrá la dirección pública de la aplicación, sin datos personales.</p>"
-      + "<div class='btns'><button class='btn' disabled>Descargar cartel con QR</button></div>";
-    return;
-  }
-  box.innerHTML = "<p>Cartel con QR a <strong>" + esc(CONFIG.publicUrl) + "</strong>.</p><div class='btns'><button class='btn' id='posterBtn'>Descargar cartel con QR</button></div>";
+  const opt = (o, sel) => Object.entries(o).map(([k,v]) => "<option value='" + k + "'" + (k === sel ? " selected" : "") + ">" + esc(v.name) + "</option>").join("");
+  box.innerHTML = "<p>Diseña un cartel para tu competición o club. El QR lleva a <strong>" + esc(CONFIG.publicUrl.replace(/^https?:\/\//,"")) + "</strong>, sin datos personales.</p>"
+    + "<label class='f' for='pv-event'>Nombre del evento <span class='hint'>(opcional)</span></label><input type='text' id='pv-event' maxlength='40' placeholder='Ej.: Media Maratón de Granada'>"
+    + "<label class='f' for='pv-sub'>Fecha y lugar <span class='hint'>(opcional)</span></label><input type='text' id='pv-sub' maxlength='50' placeholder='Ej.: Domingo 12 de abril · Salida 9:00'>"
+    + "<label class='f' for='pv-slogan'>Lema</label><select id='pv-slogan'>" + POSTER.slogans.map((x,i) => "<option value='" + i + "'>" + esc(x) + "</option>").join("") + "</select>"
+    + "<div class='row'><div><label class='f' for='pv-theme'>Estilo</label><select id='pv-theme'>" + opt(POSTER.themes, "energia") + "</select></div>"
+    + "<div><label class='f' for='pv-format'>Formato</label><select id='pv-format'>" + opt(POSTER.formats, "a4") + "</select></div></div>"
+    + "<canvas id='pv-canvas' class='poster-prev' role='img' aria-label='Vista previa del cartel'></canvas>"
+    + "<div class='btns'><button class='btn' id='posterBtn'>Descargar cartel (PNG)</button></div>"
+    + "<p class='hint' id='pv-msg'></p>";
+  const redraw = () => drawPoster().catch(() => { document.getElementById("pv-msg").textContent = "No se ha podido cargar el generador de QR. Comprueba la conexión."; });
+  ["pv-event","pv-sub","pv-slogan","pv-theme","pv-format"].forEach(id => document.getElementById(id).addEventListener("input", redraw));
   document.getElementById("posterBtn").addEventListener("click", async () => {
-    try{ await loadScript("https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"); }catch(e){ toast("No se ha podido cargar el generador de QR."); return; }
-    const qr = qrcode(0, "M"); qr.addData(CONFIG.publicUrl); qr.make();
-    const W = 1240, H = 1754, c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
-    x.fillStyle = "#fbfaf6"; x.fillRect(0,0,W,H); x.fillStyle = "#f2a516"; x.fillRect(0,0,W,40);
-    x.fillStyle = "#0b6e6e"; x.font = "700 110px system-ui"; x.fillText("Piel y Deporte", 90, 240);
-    x.fillStyle = "#1b2a33"; x.font = "400 52px system-ui"; x.fillText("Disfruta del deporte cuidando tu piel", 90, 330);
-    ["Gorra, gafas y ropa que cubra","Fotoprotector FPS 50+ resistente al agua","Reaplica en las pausas","Orejas, nuca y labios también cuentan"].forEach((t,i) => { x.font = "400 46px system-ui"; x.fillText("• " + t, 90, 450 + i*80); });
-    const n = qr.getModuleCount(), size = 640, cell = Math.floor(size/n), ox = (W - cell*n)/2, oy = 820;
-    x.fillStyle = "#fff"; x.fillRect(ox-40, oy-40, cell*n+80, cell*n+80); x.fillStyle = "#000";
-    for(let r=0;r<n;r++) for(let k=0;k<n;k++) if(qr.isDark(r,k)) x.fillRect(ox+k*cell, oy+r*cell, cell, cell);
-    x.fillStyle = "#1b2a33"; x.font = "700 44px system-ui"; x.textAlign = "center"; x.fillText("Escanea y crea tu plan de protección", W/2, oy + cell*n + 110);
-    x.font = "400 30px system-ui"; x.fillStyle = "#51616b"; x.fillText("Sin registro ni instalación", W/2, oy + cell*n + 160);
-    c.toBlob(b => offerFile("cartel-piel-y-deporte.png", b, "image/png"), "image/png");
+    await redraw(); const c = document.getElementById("pv-canvas");
+    const f = document.getElementById("pv-format").value;
+    c.toBlob(b => offerFile("cartel-piel-y-deporte-" + f + ".png", b, "image/png"), "image/png");
   });
+  redraw();
 }
+async function drawPoster(){
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js");
+  const th = POSTER.themes[document.getElementById("pv-theme").value];
+  const fm = POSTER.formats[document.getElementById("pv-format").value];
+  const ev = document.getElementById("pv-event").value.trim();
+  const sub = document.getElementById("pv-sub").value.trim();
+  const slogan = POSTER.slogans[+document.getElementById("pv-slogan").value];
+  const c = document.getElementById("pv-canvas"), W = fm.w, H = fm.h, x = c.getContext("2d");
+  c.width = W; c.height = H; const u = W / 1080, tall = H / W > 1.2;
+  const F = (sz, w) => (w || 800) + " " + Math.round(sz*u) + "px 'Helvetica Neue', Arial, sans-serif";
+  // fondo
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, th.bg[0]); g.addColorStop(1, th.bg[1]); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  // sol con rayos
+  const sx = W - 150*u, sy = (tall ? 230 : 170)*u, sr = 150*u;
+  x.save(); x.translate(sx, sy); x.strokeStyle = th.sun; x.lineCap = "round";
+  for(let i = 0; i < 16; i++){ x.rotate(Math.PI/8); x.lineWidth = (i % 2 ? 10 : 18)*u; x.beginPath(); x.moveTo(sr + 25*u, 0); x.lineTo(sr + (i % 2 ? 70 : 110)*u, 0); x.stroke(); }
+  x.beginPath(); x.arc(0, 0, sr, 0, Math.PI*2); x.fillStyle = th.sun; x.fill(); x.restore();
+  // líneas de velocidad
+  x.save(); x.globalAlpha = .13; x.fillStyle = th.acc;
+  for(let i = 0; i < 7; i++){ const y = H*(.18 + i*.11), w = W*(.35 + (i % 3)*.18); x.beginPath(); x.moveTo(-40*u, y); x.lineTo(w, y); x.lineTo(w - 60*u, y + 26*u); x.lineTo(-40*u, y + 26*u); x.closePath(); x.fill(); }
+  x.restore();
+  const P = 70*u; let y = P;
+  // marca
+  x.fillStyle = th.ink; x.font = F(34, 700); x.fillText("☀ PIEL Y DEPORTE", P, y + 30*u); y += 70*u;
+  // evento
+  if(ev){ x.font = F(40, 800); const tw = Math.min(x.measureText(ev.toUpperCase()).width, W - 2*P - 40*u);
+    x.fillStyle = th.acc; roundRect(x, P, y, tw + 40*u, 64*u, 32*u); x.fill();
+    x.fillStyle = th.bg[0]; x.fillText(ev.toUpperCase(), P + 20*u, y + 46*u, W - 2*P - 40*u); y += 84*u;
+    if(sub){ x.fillStyle = th.ink; x.font = F(30, 600); x.fillText(sub, P, y + 28*u, W - 2*P); y += 52*u; } }
+  else if(sub){ x.fillStyle = th.ink; x.font = F(30, 600); x.fillText(sub, P, y + 28*u, W - 2*P); y += 52*u; }
+  // titular en cursiva deportiva
+  const hs = tall ? 118 : 86; x.font = F(hs, 900);
+  const words = slogan.toUpperCase().split(" "); const lines = []; let cur = "";
+  const maxW = (tall ? W*0.74 : W*0.62);
+  words.forEach(w => { const t = cur ? cur + " " + w : w; if(x.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t; }); lines.push(cur);
+  y += (tall ? 60 : 40)*u;
+  lines.forEach((l, i) => { x.save(); x.translate(P, y + hs*u); x.transform(1, 0, -0.18, 1, 0, 0);
+    x.fillStyle = "rgba(0,0,0,.25)"; x.fillText(l, 6*u, 6*u); x.fillStyle = i === lines.length - 1 ? th.acc : th.ink; x.fillText(l, 0, 0); x.restore(); y += hs*1.02*u; });
+  y += 40*u;
+  // QR
+  const qr = qrcode(0, "M"); qr.addData(CONFIG.publicUrl); qr.make();
+  const story = H / W > 1.6;
+  const n = qr.getModuleCount(); let qs = (story ? 470 : tall ? 400 : 330)*u, cell = qs / n;
+  let qx, qy;
+  if(story){ qx = (W - qs)/2; qy = 0; } else if(tall){ qx = W - P - qs - 30*u; qy = Math.max(y + 10*u, H - qs - 330*u); } else { qx = W - P - qs - 30*u; qy = H - qs - 170*u; }
+  // consejos
+  const tipsX = P, tipsW = story ? W - 2*P : qx - P - 40*u; let ty = tall ? y : Math.max(y, H*0.48);
+  const tipH = tall ? 92 : 74;
+  POSTER.tips.forEach(([ic, t]) => { x.fillStyle = "rgba(255,255,255,.14)"; roundRect(x, tipsX, ty, tipsW, (tipH - 14)*u, 18*u); x.fill();
+    x.font = F(tall ? 40 : 32, 400); x.fillStyle = th.ink; x.fillText(ic, tipsX + 18*u, ty + (tipH - 14)*u*0.68);
+    x.font = F(tall ? 32 : 26, 700); x.fillText(t, tipsX + (tall ? 80 : 66)*u, ty + (tipH - 14)*u*0.64, tipsW - 100*u); ty += tipH*u; });
+  if(story){ qy = ty + 70*u; qs = Math.min(qs, H - 300*u - qy); cell = qs / n; qx = (W - qs)/2; }
+  // tarjeta QR
+  x.save(); x.shadowColor = "rgba(0,0,0,.3)"; x.shadowBlur = 30*u; x.fillStyle = "#fff"; roundRect(x, qx - 30*u, qy - 30*u, qs + 60*u, qs + 130*u, 28*u); x.fill(); x.restore();
+  x.fillStyle = "#000"; for(let r = 0; r < n; r++) for(let k = 0; k < n; k++) if(qr.isDark(r, k)) x.fillRect(qx + k*cell, qy + r*cell, Math.ceil(cell), Math.ceil(cell));
+  x.textAlign = "center"; x.fillStyle = th.bg[0]; x.font = F(36, 900); x.fillText("ESCANEA", qx + qs/2, qy + qs + 52*u);
+  x.font = F(21, 600); x.fillStyle = "#33424b"; x.fillText("Tu plan de protección en 1 minuto", qx + qs/2, qy + qs + 84*u, qs + 40*u); x.textAlign = "left";
+  // línea de meta a cuadros
+  const cs = 28*u, rows = 2, by = H - rows*cs;
+  for(let r = 0; r < rows; r++) for(let k = 0; k*cs < W; k++){ x.fillStyle = (r + k) % 2 ? "#111" : "#fff"; x.fillRect(k*cs, by + r*cs, cs, cs); }
+  x.fillStyle = th.ink; x.font = F(24, 600); x.fillText("Sin registro ni instalación · No sustituye la valoración médica", P, by - 24*u, (tall ? W - 2*P : qx - P - 60*u));
+}
+function roundRect(x, X, Y, w, h, r){ x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
 function loadScript(src){ return new Promise((res, rej) => { if(window.qrcode) return res(); const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
 
 /* =====================================================================
    10. MÓDULO 4 · LESIONES
    ===================================================================== */
 function renderLesion(){
-  document.getElementById("lesionContent").innerHTML = CONTENT.lesion.map(l => "<div class='card'><h2>" + esc(l.t) + "</h2>" + l.html + "</div>").join("")
+  const photos = t => { const ph = CONTENT.lesionPhotos[t]; if(!ph) return "";
+    return "<div class='figs" + (ph.length === 1 ? " one" : "") + "'>" + ph.map(p => "<figure class='ph'><img loading='lazy' referrerpolicy='no-referrer' alt='" + esc(p.c) + "' src='https://wwwn.cdc.gov/phil/PHIL_Images/" + p.id + "/" + p.id + "_lores.jpg' onerror=\"this.closest('figure').style.display='none'\"><figcaption>" + esc(p.c) + "</figcaption></figure>").join("") + "</div>"
+      + "<p class='credit'>Imagen: National Cancer Institute (NCI), www.cancer.gov. Dominio público.</p>"; };
+  document.getElementById("lesionContent").innerHTML =
+    "<p class='note info'>Las fotografías son ejemplos educativos. No compares tu lesión con ellas para descartar nada: si algo te preocupa, consulta.</p>"
+    + CONTENT.lesion.map(l => "<div class='card'><h2>" + esc(l.t) + "</h2>" + l.html + photos(l.t) + "</div>").join("")
     + "<p class='meta'>" + reviewTag("lesion") + "</p>";
   let a = "<ul class='ticks'><li><strong>Pide valoración médica sin esperar</strong> a la siguiente campaña o revisión programada.</li>"
     + "<li>Puedes pedir cita con tu <strong>médico o médica de familia</strong> en tu centro de salud, por los canales habituales de tu servicio de salud.</li>"
@@ -1058,7 +1138,7 @@ function renderSurveyList(){
 }
 function surveyBody(r){
   const j = a => a && a.length ? a.join(", ") : "—";
-  return "Respuesta voluntaria · Piel y Deporte (prototipo)\n\n"
+  return "Respuesta voluntaria · Piel y Deporte\n\n"
     + "Fecha: " + r.fecha + "\nDeporte: " + r.deporte + "\nDuración: " + r.duracion
     + "\nMedidas utilizadas: " + j(r.medidas) + "\nReaplicación: " + (r.reaplicacion || "—")
     + "\nQuemadura o enrojecimiento: " + (r.quemadura || "—") + "\nBarreras: " + j(r.barreras)
@@ -1068,12 +1148,12 @@ function surveyBody(r){
 function renderSurveySend(list){
   const el = document.getElementById("surveyList");
   if(!list.length) return;
-  if(!CONFIG.surveyEmail){ el.insertAdjacentHTML("beforeend", "<p class='hint'>El envío de respuestas por correo está pendiente de configuración.</p>"); return; }
+  if(!CONFIG.surveyEmail) return;
   const r = list[list.length - 1];
   el.insertAdjacentHTML("beforeend",
     "<div style='margin-top:16px;border-top:1px solid var(--line);padding-top:12px'><h3>Enviar mi última respuesta (opcional)</h3>"
     + "<div class='note info'><strong>Antes de enviar:</strong> se abrirá tu propia aplicación de correo con tus respuestas y tú decides si lo envías. "
-    + "Lo recibirá el equipo responsable de este prototipo en <strong>" + esc(CONFIG.surveyEmail) + "</strong>, solo para evaluar la utilidad de la herramienta. "
+    + "Lo recibirá el equipo responsable de esta aplicación en <strong>" + esc(CONFIG.surveyEmail) + "</strong>, solo para evaluar la utilidad de la herramienta. "
     + "El mensaje incluye tus respuestas (también si tuviste enrojecimiento o quemadura) y, al enviarlo desde tu correo, tu dirección de email. "
     + "No se usará para otros fines ni se cederá a terceros. Puedes pedir que se borre escribiendo a esa misma dirección. Participar es voluntario.</div>"
     + "<div class='msg'>" + esc(surveyBody(r)) + "</div>"
@@ -1101,46 +1181,31 @@ function renderSources(){
   document.getElementById("reviewList").innerHTML = "<ul class='clean'>" + Object.values(CONTENT.review).map((r,i) => "<li class='check' style='display:block'><strong>" + esc(r.label) + "</strong><br>"
     + (r.reviewed ? "<span class='tag op'>Revisado el " + esc(r.reviewed) + "</span>" : "<span class='tag rev'>Pendiente de revisión clínica</span>") + " <span class='meta'>Borrador redactado el " + CONFIG.draftDate + "</span></li>").join("") + "</ul>";
 }
-const STATUS = [
-  ["Pantalla de inicio y navegación","op","Operativo."],
-  ["Formulario de actividad y plan de protección","op","Reglas de recomendación operativas, sin cálculo de tiempo seguro. Contenido pendiente de revisión clínica."],
-  ["Datos UV reales","cfg","Integración con Open-Meteo implementada, pero la vista previa de Claude bloquea conexiones externas: se muestra “Datos UV no disponibles”. Antes de publicar: validar la fuente (o sustituirla por una de AEMET si se dispone de acceso), y confirmar cobertura y hora de emisión."],
-  ["Datos UV simulados","demo","Botón “Ver ejemplo con datos simulados”, siempre etiquetado como simulación."],
-  ["Geolocalización","cfg","Opcional y sin almacenamiento. La vista previa la bloquea; funcionará al publicar en un dominio propio con HTTPS."],
-  ["Guardar plan como imagen o ficha","op","Disponible si la vista permite descargas (se pide confirmación). Alternativa: copiar el plan."],
-  ["Recordatorios de calendario (.ics)","cfg","Generación operativa. La vista previa de Claude no permite archivos .ics; funcionará al publicar. Alternativa: copiar horarios."],
-  ["Formación de entrenadores, listas y mensajes","op","Operativo. Contenido pendiente de revisión clínica."],
-  ["Cuestionario y registro local de formación","op","Registro solo en el dispositivo; no es una acreditación."],
-  ["Lista de organizadores y ficha de pendientes","op","Operativo. “Medidas completadas” no es una certificación."],
-  ["Carteles con QR","cfg","Pendiente de configurar la URL pública definitiva (CONFIG.publicUrl)."],
-  ["Guía de lesiones","op","Educativa, sin diagnóstico, sin fotos. Pendiente de revisión clínica."],
-  ["Solicitud de cita o derivación","cfg","No existe servicio configurado: no se ofrece. Se explica cómo consultar por los recursos habituales."],
-  ["Encuesta posterior","op","Guardado solo en el dispositivo."],
-  ["Envío voluntario de la encuesta por correo","rev","El participante, tras leer la información y marcar el consentimiento, envía su respuesta desde su propia app de correo. Pendiente de validar el texto informativo y la base jurídica (Fundación / delegado de protección de datos) y, si los datos se usan para investigación, revisión ética."],
-  ["Recogida centralizada automática (servidor)","cfg","Desactivada. Requiere información al participante, base jurídica, seguridad y, cuando corresponda, revisión ética."],
-  ["Acceso sin conexión","op","En la versión publicada, la app queda guardada tras la primera visita y los contenidos educativos se abren sin conexión. Los datos UV requieren conexión. No disponible dentro del visor de Claude."],
-  ["Enlaces a la Fundación Piel Sana y UV-Derma","rev","Pendientes de confirmar por la Fundación."],
-  ["Contenidos clínicos","rev","Todos pendientes de revisión clínica."],
-  ["Logotipos oficiales","cfg","No incluidos. Se añadirán si la Fundación los proporciona."]
-];
-function renderStatus(){
-  const lab = { op: "Operativo", demo: "Demostración", cfg: "Requiere configuración", rev: "Requiere validación" };
-  document.getElementById("statusTable").innerHTML = "<thead><tr><th>Función</th><th>Estado</th><th>Detalle</th></tr></thead><tbody>"
-    + STATUS.map(r => "<tr><td><strong>" + esc(r[0]) + "</strong></td><td><span class='tag " + r[1] + "'>" + lab[r[1]] + "</span></td><td>" + esc(r[2]) + "</td></tr>").join("") + "</tbody>";
-}
-function renderDiag(){
-  const el = document.getElementById("envDiag"); if(!el) return;
-  const items = [
-    ["Almacenamiento local", store.ok() ? "disponible" : "no disponible en esta vista"],
-    ["Descargas", DL ? "disponibles con confirmación" : "dependen del navegador"],
-    ["Geolocalización", "geolocation" in navigator ? "el navegador la ofrece (puede estar bloqueada en esta vista)" : "no disponible"],
-    ["Proveedor UV configurado", CONFIG.uvProvider === "none" ? "ninguno" : UVProviders[CONFIG.uvProvider].name],
-    ["URL pública para QR", CONFIG.publicUrl || "sin configurar"],
-    ["Servicio de citas", CONFIG.appointmentService ? CONFIG.appointmentService.name : "sin configurar"],
-    ["Recogida centralizada", CONFIG.centralSurveyCollection ? "activada" : "desactivada"],
-    ["Envío de encuesta por correo", CONFIG.surveyEmail ? "a " + CONFIG.surveyEmail + " (lo envía el participante)" : "sin configurar"]
-  ];
-  el.innerHTML = items.map(i => "<li class='check' style='display:block'><strong>" + esc(i[0]) + ":</strong> " + esc(i[1]) + "</li>").join("");
+function renderSaber(){
+  const sec = (t, items) => "<div class='card'><h2>" + t + "</h2><ul class='ticks'>" + items.map(x => "<li>" + x + "</li>").join("") + "</ul></div>";
+  document.getElementById("saberContent").innerHTML =
+    sec("Para qué sirve", [
+      "Te ayuda a preparar la protección solar de tu entrenamiento o competición.",
+      "Ofrece formación y materiales para entrenadores, monitores, clubes y organizadores.",
+      "Explica los signos de alarma en la piel para que sepas cuándo consultar." ])
+  + sec("Lo que no hace", [
+      "<strong>No diagnostica</strong> lesiones ni sustituye la valoración médica.",
+      "No calcula “minutos seguros al sol” ni el tiempo hasta quemarte: cada piel responde distinto y el UV cambia a lo largo del día.",
+      "No gestiona citas. Si una lesión te preocupa, consulta con tu médico por los canales habituales." ])
+  + sec("Datos UV", [
+      "El índice UV procede de una predicción por modelo de <a href='https://open-meteo.com/' target='_blank' rel='noopener'>Open-Meteo</a>. Se muestran el proveedor, la ubicación y la hora de consulta.",
+      "Se distingue entre el valor horario durante tu actividad y el máximo del día.",
+      "Si no hay conexión o datos, verás “Datos UV no disponibles” y recomendaciones generales. Puedes contrastar siempre con <a href='" + AEMET_UV + "' target='_blank' rel='noopener'>AEMET</a>.",
+      "El botón “Ver ejemplo con datos simulados” muestra valores inventados, siempre marcados como simulados." ])
+  + sec("Tu privacidad", [
+      "No hace falta registrarse. No hay publicidad ni rastreadores.",
+      "La ubicación es opcional: solo se usa para consultar el UV en ese momento y no se guarda.",
+      "Tus listas, tu registro de formación y tus respuestas a la encuesta se guardan solo en tu dispositivo. Puedes borrarlos cuando quieras.",
+      "Solo si tú lo decides, tras leer la información y marcar tu consentimiento, puedes enviar tu respuesta a la encuesta por correo desde tu propia aplicación de correo." ])
+  + sec("Contenidos", [
+      "Los textos son de redacción propia. Las fotografías de lesiones son del National Cancer Institute (NCI, www.cancer.gov), de dominio público.",
+      "Cada contenido indica su estado de revisión clínica en <a href='#fuentes'>Fuentes y revisión</a>.",
+      "Funciona en el móvil sin instalar nada. Tras la primera visita, los contenidos educativos se pueden abrir sin conexión." ]);
 }
 
 /* =====================================================================
@@ -1161,7 +1226,7 @@ renderPoster();
 renderLesion();
 renderSurvey();
 renderSources();
-renderStatus();
+renderSaber();
 route();
 /* Modo sin conexión: solo en la versión publicada en dominio propio */
 try{ if("serviceWorker" in navigator && location.protocol === "https:" && !/claude/.test(location.hostname)) navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
