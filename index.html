@@ -340,6 +340,8 @@ const CONFIG = {
   // Recogida centralizada de encuestas: desactivada hasta configurar información al participante,
   // base jurídica, seguridad y, cuando corresponda, revisión ética.
   centralSurveyCollection: false,
+  // Envío voluntario de la encuesta desde la app de correo del propio participante (mailto). "" = desactivado.
+  surveyEmail: "",
   // Proveedor UV activo: "open-meteo" (predicción por modelo, pendiente de validación) o "none".
   uvProvider: "open-meteo",
   draftDate: "18/11/2026" // fecha de redacción del borrador (no es fecha de revisión clínica)
@@ -1027,7 +1029,7 @@ function renderSurvey(){
     + "<p class='f'>¿Qué te lo puso difícil?</p>" + chipGroup("s-bar", SURVEY.barriers, "checkbox")
     + "<p class='f'>¿Te ha resultado útil la herramienta?</p>" + chipGroup("s-use", ["Nada","Poco","Bastante","Mucho"], "radio")
     + "<p class='hint' style='margin-top:14px'>No incluyas tu nombre, fecha de nacimiento, fotos ni ubicación. " + reviewTag("survey") + "</p>"
-    + "<div class='note info'>Tus respuestas se guardan <strong>solo en este dispositivo</strong>. El envío a la Fundación está desactivado hasta que se configuren la información al participante, la base jurídica, la seguridad y, cuando corresponda, la revisión ética.</div>"
+    + "<div class='note info'>Tus respuestas se guardan <strong>solo en este dispositivo</strong>." + (CONFIG.surveyEmail ? " Después de guardarlas, si quieres, podrás enviarlas tú por correo." : "") + "</div>"
     + "<div class='btns'><button class='btn full' type='submit'>Guardar mi respuesta</button></div>";
   f.onsubmit = e => {
     e.preventDefault();
@@ -1050,8 +1052,39 @@ function renderSurveyList(){
   el.innerHTML = list.length ? "<p>Has guardado " + list.length + " respuesta" + (list.length > 1 ? "s" : "") + " en este dispositivo.</p>"
     + "<div class='btns'><button class='btn ghost small' id='sExport'>Descargar mis respuestas (.json)</button><button class='btn ghost small' id='sDel'>Borrar mis respuestas</button></div>"
     : "<p class='hint'>Aún no hay respuestas guardadas en este dispositivo.</p>";
+  renderSurveySend(list);
   const ex = document.getElementById("sExport"); if(ex) ex.onclick = () => offerFile("mis-respuestas-piel-y-deporte.json", JSON.stringify(list, null, 2), "application/json");
   const de = document.getElementById("sDel"); if(de) de.onclick = () => { store.del("encuestas"); renderSurveyList(); toast("Respuestas borradas."); };
+}
+function surveyBody(r){
+  const j = a => a && a.length ? a.join(", ") : "—";
+  return "Respuesta voluntaria · Piel y Deporte (prototipo)\n\n"
+    + "Fecha: " + r.fecha + "\nDeporte: " + r.deporte + "\nDuración: " + r.duracion
+    + "\nMedidas utilizadas: " + j(r.medidas) + "\nReaplicación: " + (r.reaplicacion || "—")
+    + "\nQuemadura o enrojecimiento: " + (r.quemadura || "—") + "\nBarreras: " + j(r.barreras)
+    + "\nUtilidad de la herramienta: " + (r.utilidad || "—")
+    + "\n\nEnviado voluntariamente por el participante tras leer la información y dar su consentimiento en la app.";
+}
+function renderSurveySend(list){
+  const el = document.getElementById("surveyList");
+  if(!list.length) return;
+  if(!CONFIG.surveyEmail){ el.insertAdjacentHTML("beforeend", "<p class='hint'>El envío de respuestas por correo está pendiente de configuración.</p>"); return; }
+  const r = list[list.length - 1];
+  el.insertAdjacentHTML("beforeend",
+    "<div style='margin-top:16px;border-top:1px solid var(--line);padding-top:12px'><h3>Enviar mi última respuesta (opcional)</h3>"
+    + "<div class='note info'><strong>Antes de enviar:</strong> se abrirá tu propia aplicación de correo con tus respuestas y tú decides si lo envías. "
+    + "Lo recibirá el equipo responsable de este prototipo en <strong>" + esc(CONFIG.surveyEmail) + "</strong>, solo para evaluar la utilidad de la herramienta. "
+    + "El mensaje incluye tus respuestas (también si tuviste enrojecimiento o quemadura) y, al enviarlo desde tu correo, tu dirección de email. "
+    + "No se usará para otros fines ni se cederá a terceros. Puedes pedir que se borre escribiendo a esa misma dirección. Participar es voluntario.</div>"
+    + "<div class='msg'>" + esc(surveyBody(r)) + "</div>"
+    + "<div class='check'><input type='checkbox' id='sConsent'><label for='sConsent'>He leído la información y quiero enviar mis respuestas.</label></div>"
+    + "<div class='btns'><button class='btn' id='sSend' disabled>Abrir mi correo para enviar</button><button class='btn ghost small' id='sCopy'>Copiar respuestas</button></div>"
+    + "<p class='hint'>Si no se abre tu correo, copia las respuestas y envíalas a " + esc(CONFIG.surveyEmail) + ".</p></div>");
+  const c = document.getElementById("sConsent"), b = document.getElementById("sSend");
+  c.onchange = () => { b.disabled = !c.checked; };
+  b.onclick = () => { if(!c.checked) return;
+    location.href = "mailto:" + CONFIG.surveyEmail + "?subject=" + encodeURIComponent("Encuesta Piel y Deporte · " + r.fecha) + "&body=" + encodeURIComponent(surveyBody(r)); };
+  document.getElementById("sCopy").onclick = () => copyText(surveyBody(r));
 }
 function renderPending(){
   const p = store.get("pendiente", null); const el = document.getElementById("pendingSurvey");
@@ -1083,7 +1116,8 @@ const STATUS = [
   ["Guía de lesiones","op","Educativa, sin diagnóstico, sin fotos. Pendiente de revisión clínica."],
   ["Solicitud de cita o derivación","cfg","No existe servicio configurado: no se ofrece. Se explica cómo consultar por los recursos habituales."],
   ["Encuesta posterior","op","Guardado solo en el dispositivo."],
-  ["Recogida centralizada de encuestas","cfg","Desactivada hasta configurar información al participante, base jurídica, seguridad y revisión ética."],
+  ["Envío voluntario de la encuesta por correo","rev","El participante, tras leer la información y marcar el consentimiento, envía su respuesta desde su propia app de correo. Pendiente de validar el texto informativo y la base jurídica (Fundación / delegado de protección de datos) y, si los datos se usan para investigación, revisión ética."],
+  ["Recogida centralizada automática (servidor)","cfg","Desactivada. Requiere información al participante, base jurídica, seguridad y, cuando corresponda, revisión ética."],
   ["Acceso sin conexión","op","En la versión publicada, la app queda guardada tras la primera visita y los contenidos educativos se abren sin conexión. Los datos UV requieren conexión. No disponible dentro del visor de Claude."],
   ["Enlaces a la Fundación Piel Sana y UV-Derma","rev","Pendientes de confirmar por la Fundación."],
   ["Contenidos clínicos","rev","Todos pendientes de revisión clínica."],
@@ -1103,7 +1137,8 @@ function renderDiag(){
     ["Proveedor UV configurado", CONFIG.uvProvider === "none" ? "ninguno" : UVProviders[CONFIG.uvProvider].name],
     ["URL pública para QR", CONFIG.publicUrl || "sin configurar"],
     ["Servicio de citas", CONFIG.appointmentService ? CONFIG.appointmentService.name : "sin configurar"],
-    ["Recogida centralizada", CONFIG.centralSurveyCollection ? "activada" : "desactivada"]
+    ["Recogida centralizada", CONFIG.centralSurveyCollection ? "activada" : "desactivada"],
+    ["Envío de encuesta por correo", CONFIG.surveyEmail ? "a " + CONFIG.surveyEmail + " (lo envía el participante)" : "sin configurar"]
   ];
   el.innerHTML = items.map(i => "<li class='check' style='display:block'><strong>" + esc(i[0]) + ":</strong> " + esc(i[1]) + "</li>").join("");
 }
